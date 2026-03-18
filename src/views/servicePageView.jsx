@@ -1,6 +1,7 @@
 export function ServicePageView(props) {
   const providers = props.providers;
 
+
   const activeProviders = providers.filter(p => p.status === "active");
   const inactiveProviders = providers.filter(p => p.status === "inactive");
 
@@ -24,7 +25,8 @@ export function ServicePageView(props) {
         >
             {provider.status === "active" ? "Active" : "Inactive"}
         </span>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition">
+        <button onClick={() => props.changeServiceStatus(provider.id)}
+        className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition">
             {provider.status === "active" ? "Access" : "Connect"}
         </button>
         </div>

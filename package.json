@@ -15,6 +15,7 @@
     "dependencies": {
         "react": "latest",
         "react-dom": "latest",
-        "react-router-dom": "latest"
+        "react-router-dom": "latest",
+        "zustand": "^5.0.12"
     }
 }

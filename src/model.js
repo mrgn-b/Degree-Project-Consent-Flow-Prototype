@@ -8,4 +8,21 @@ export const model = {
     { id: "cafe", name: "Cafe Delight", description: "Coffee and snack delivery service", logoUrl: "/assets/logos/cafe.svg", status: "inactive" },
   ],
 
+  consents: [
+    {
+      id: 1,
+      service: "Acme Analytics",
+      status: "active",
+      updatedAt: "2026-03-20",
+      expiresAt: "2027-03-20",
+    },
+    {
+      id: 2,
+      service: "Hair Salon Luxe",
+      status: "inactive",
+      updatedAt: "2025-12-01",
+      expiresAt: "2026-12-01",
+    },
+  ]
+
 };

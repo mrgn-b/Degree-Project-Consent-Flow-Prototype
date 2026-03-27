@@ -9,20 +9,85 @@ export const model = {
   ],
 
   consents: [
-    {
-      id: 1,
-      service: "Acme Analytics",
-      status: "active",
-      updatedAt: "2026-03-20",
-      expiresAt: "2027-03-20",
+  {
+    id: 1,
+
+    serviceId: "acme",
+
+    purposes: [
+      {
+        id: "analytics",
+        description: "Usage analytics",
+        granted: true,
+      },
+      {
+        id: "personalization",
+        description: "Personalized recommendations",
+        granted: false,
+      },
+    ],
+
+    dataCategories: [
+      { type: "usage_data", granted: true },
+      { type: "location", granted: false },
+    ],
+
+    thirdParties: [
+      {
+        id: "google_analytics",
+        name: "Google Analytics",
+        granted: true,
+      },
+    ],
+
+    status: "active",
+
+    timestamps: {
+      createdAt: "2026-03-20T10:00:00Z",
+      updatedAt: "2026-03-20T10:05:00Z",
+      expiresAt: "2027-03-20T00:00:00Z",
+      revokedAt: null,
     },
-    {
-      id: 2,
-      service: "Hair Salon Luxe",
-      status: "inactive",
-      updatedAt: "2025-12-01",
-      expiresAt: "2026-12-01",
+
+    metadata: {
+      version: "1.0",
+      consentMethod: "explicit",
     },
-  ]
+  },
+
+  {
+    id: 2,
+
+    serviceId: "hair",
+
+    purposes: [
+      {
+        id: "booking",
+        description: "Appointment booking",
+        granted: true,
+      },
+    ],
+
+    dataCategories: [
+      { type: "contact_info", granted: true },
+    ],
+
+    thirdParties: [],
+
+    status: "revoked",
+
+    timestamps: {
+      createdAt: "2025-12-01T09:00:00Z",
+      updatedAt: "2025-12-10T10:00:00Z",
+      expiresAt: "2026-12-01T00:00:00Z",
+      revokedAt: "2025-12-10T10:00:00Z",
+    },
+
+    metadata: {
+      version: "1.0",
+      consentMethod: "explicit",
+    },
+  },
+],
 
 };

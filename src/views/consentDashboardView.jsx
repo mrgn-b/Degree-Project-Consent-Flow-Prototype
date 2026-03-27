@@ -7,12 +7,12 @@ export function ConsentDashboardView(props) {
 
   const statusStyles = {
     active: "bg-green-100 text-green-700",
-    inactive: "bg-gray-100 text-gray-600",
+    revoked: "bg-gray-100 text-gray-600",
     expired: "bg-red-100 text-red-700",
   };
 
   const confirmRevoke = () => {
-    props.changeConsentStatus(selectedConsentToRevoke.id);
+    props.toggleConsentStatus(selectedConsentToRevoke.id);
     setSelectedConsentToRevoke(null);
   };
   
@@ -49,7 +49,7 @@ export function ConsentDashboardView(props) {
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
         <SummaryCard title="Active" count={props.activeConsentCount} color="green" />
-        <SummaryCard title="Inactive" count={props.inactiveConsentCount} color="gray" />
+        <SummaryCard title="Revoked" count={props.inactiveConsentCount} color="gray" />
         <SummaryCard title="Expired" count={props.expiredConsentCount} color="red" />
       </div>
 
@@ -62,31 +62,36 @@ export function ConsentDashboardView(props) {
               <th className="p-4">Status</th>
               <th className="p-4">Updated</th>
               <th className="p-4">Expires</th>
+              <th className="p-4">Revoked At</th>
               <th className="p-4"></th>
             </tr>
           </thead>
           <tbody>
             {consents.map((c) => (
               <tr key={c.id} className="border-t">
-                <td className="p-4">{c.service}</td>
+                <td className="p-4">{props.providerMap[c.serviceId].name}</td>
 
                 <td className="p-4">
                   <span
-                    className={`px-2 py-1 text-xs rounded-full ${statusStyles[c.status]}`}
+                    className={`px-2 py-1 text-xs rounded-full ${statusStyles[props.getConsentStatus(c)]}`}
                   >
-                    {c.status}
+                    {props.getConsentStatus(c)}
                   </span>
                 </td>
 
-                <td className="p-4">{c.updatedAt}</td>
-                <td className="p-4">{c.expiresAt}</td>
+                <td className="p-4">{c.timestamps.updatedAt}</td>
+                <td className="p-4">{c.timestamps.expiresAt}</td>
+
+                <td className="p-4">
+                    {c.timestamps.revokedAt ? c.timestamps.revokedAt : "-"}
+                </td>
 
                 <td className="p-4 text-right">
                   <button className="text-blue-600 text-sm mr-3">
                     View
                   </button>
 
-                  {c.status === "active" && (
+                  {props.getConsentStatus(c) === "active" && (
                     <button
                       onClick={() => setSelectedConsentToRevoke(c)}
                       className="text-red-600 text-sm"

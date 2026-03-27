@@ -7,27 +7,49 @@ export const useConsentStore = create(
         (set, get) => ({
             consents: model.consents,
 
-            // Changes status
-            toggleStatus: (id) => {
-                set({
-                consents: get().consents.map((c) =>
-                    c.id === id
-                    ? {
-                        ...c,
-                        status: c.status === "active" ? "inactive" : "active",
-                        }
-                    : c
-                ),
-                });
+            // Revokes consent if active
+            // If not active unrevoke consent
+            toggleConsentRevocation: (id) => {
+                set((state) => ({
+                consents: state.consents.map((c) => {
+                    if (c.id !== id) return c;
+
+                    const isRevoked = !!c.timestamps.revokedAt;
+                    const now = new Date().toISOString();
+
+                    return {
+                    ...c,
+                    timestamps: {
+                        ...c.timestamps,
+                        revokedAt: isRevoked ? null : now,
+                        updatedAt: now,
+                    },
+                    };
+                }),
+                }));
             },
 
             setConsents: (consents) => set({ consents }),
 
+            // Gets the status of the consent
+            getStatus: (consent) => {
+                if (consent.timestamps.revokedAt) return "revoked";
+
+                if (
+                consent.timestamps?.expiresAt &&
+                new Date(consent.timestamps.expiresAt) < new Date()
+                ) {
+                return "expired";
+                }
+
+                return "active";
+            },
+
             getActiveCount: () =>
                 get().consents.filter((c) => c.status === "active").length,
             
-            getInactiveCount: () =>
-                get().consents.filter((c) => c.status === "inactive").length,
+            getRevokedCount: () =>
+                get().consents.filter((c) => c.status === "revoked").length,
             
             getExpiredCount: () =>
                 get().consents.filter((c) => c.status === "expired").length,

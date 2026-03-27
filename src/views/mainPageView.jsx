@@ -23,9 +23,9 @@ export function MainPageView() {
             </button>
 
             <button 
-            onClick={() => navigate("/audit-log")}
+            onClick={() => navigate("/consent-history")}
             className="rounded-xl bg-white px-6 py-3 font-semibold text-gray-700 shadow-md transition hover:bg-gray-100 hover:shadow-lg">
-            Audit Log
+            Consent History
             </button>
         </div>
         </div>

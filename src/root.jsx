@@ -11,7 +11,7 @@ export function Root(props){
                 <Link className="hover:underline" to="/">Main Page</Link>
                 <Link className="hover:underline" to="/services">Services</Link>
                 <Link className="hover:underline" to="/consent-dashboard">Consent Dashboard</Link>
-                <Link className="hover:underline" to="/audit-log">Audit Log</Link>
+                <Link className="hover:underline" to="/consent-history">Consent History</Link>
             </nav>
 
             {/* Page routes */}

@@ -46,13 +46,13 @@ export const useConsentStore = create(
             },
 
             getActiveCount: () =>
-                get().consents.filter((c) => c.status === "active").length,
+                get().consents.filter((c) => get().getStatus(c) === "active").length,
             
             getRevokedCount: () =>
-                get().consents.filter((c) => c.status === "revoked").length,
+                get().consents.filter((c) => get().getStatus(c) === "revoked").length,
             
             getExpiredCount: () =>
-                get().consents.filter((c) => c.status === "expired").length,
+                get().consents.filter((c) => get().getStatus(c) === "expired").length,
         }),
         {
             name: "consents" // localStorage key

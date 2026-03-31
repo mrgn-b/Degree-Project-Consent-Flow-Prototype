@@ -17,6 +17,12 @@ export function MainPageView() {
             </button>
 
             <button 
+            onClick={() => navigate("/data-requests")}
+            className="rounded-xl bg-white px-6 py-3 font-semibold text-gray-700 shadow-md transition hover:bg-gray-100 hover:shadow-lg">
+            Data Requests
+            </button>
+
+            <button 
             onClick={() => navigate("/consent-dashboard")}
             className="rounded-xl bg-white px-6 py-3 font-semibold text-gray-700 shadow-md transition hover:bg-gray-100 hover:shadow-lg">
             Consent Dashboard

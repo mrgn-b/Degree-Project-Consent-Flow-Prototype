@@ -10,6 +10,7 @@ export function Root(props){
             <nav className="bg-blue-600 text-white w-full p-4 flex justify-center gap-4">
                 <Link className="hover:underline" to="/">Main Page</Link>
                 <Link className="hover:underline" to="/services">Services</Link>
+                <Link className="hover:underline" to="/data-requests">Data Requests</Link>
                 <Link className="hover:underline" to="/consent-dashboard">Consent Dashboard</Link>
                 <Link className="hover:underline" to="/consent-history">Consent History</Link>
             </nav>

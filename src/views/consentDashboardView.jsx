@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export function ConsentDashboardView(props) {
   const consents = props.consents;
+  const changeServiceStatus= props.changeServiceStatus;
 
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
 
@@ -13,6 +14,7 @@ export function ConsentDashboardView(props) {
 
   const confirmRevoke = () => {
     props.toggleConsentStatus(selectedConsentToRevoke.id);
+    changeServiceStatus(selectedConsentToRevoke.serviceId);
     setSelectedConsentToRevoke(null);
   };
   

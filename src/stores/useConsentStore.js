@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { model } from "../model";
+import { nanoid } from "nanoid";
 
 export const useConsentStore = create(
     persist(
@@ -27,6 +28,35 @@ export const useConsentStore = create(
                     };
                 }),
                 }));
+            },
+
+
+            // Add a new consent
+            createConsent: (serviceId, purposes = [], dataCategories = [], thirdParties = []) => {
+                const now = new Date().toISOString();
+                const oneYearLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString();
+                const newConsent = {
+                id: nanoid(),
+                serviceId,
+                // For now, all parameters are granted
+                purposes: purposes.map(p => ({ ...p, granted: true })),
+                dataCategories: dataCategories.map(d => ({ ...d, granted: true })),
+                thirdParties: thirdParties.map(t => ({ ...t, granted: true })),
+                status: "active",
+                // For now, expiresAt one year from "now"
+                timestamps: {
+                    createdAt: now,
+                    updatedAt: now,
+                    expiresAt: oneYearLater,
+                    revokedAt: null
+                },
+                metadata: {
+                    version: "1.0",
+                    consentMethod: "explicit"
+                }
+                };
+
+                set((state) => ({ consents: [...state.consents, newConsent] }));
             },
 
             setConsents: (consents) => set({ consents }),

@@ -1,9 +1,17 @@
 export function ServicePageView(props) {
   const providers = props.providers;
-
+  const createConsent = props.createConsent;
+  const changeServiceStatus = props.changeServiceStatus;
 
   const activeProviders = providers.filter(p => p.status === "active");
   const inactiveProviders = providers.filter(p => p.status === "inactive");
+
+  function handleConsentACB(provider){
+    if(provider.status == "inactive"){
+      createConsent(provider.id, provider.purposes, provider.dataCategories, provider.thirdParties);
+      changeServiceStatus(provider.id);
+    }
+  }
 
   function renderProviderCardACB(provider, index){
     return (
@@ -25,7 +33,7 @@ export function ServicePageView(props) {
         >
             {provider.status === "active" ? "Active" : "Inactive"}
         </span>
-        <button onClick={() => props.changeServiceStatus(provider.id)}
+        <button onClick={() => handleConsentACB(provider)}
         className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition">
             {provider.status === "active" ? "Access" : "Connect"}
         </button>

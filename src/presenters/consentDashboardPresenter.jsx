@@ -11,6 +11,7 @@ export function ConsentDashboard(){
     const getRevokedConsentCount = useConsentStore((state) => state.getRevokedCount);
     const getExpiredConsentCount = useConsentStore((state) => state.getExpiredCount);
     const providers = useServiceProviderStore((state) => state.providers);
+    const changeServiceStatus = useServiceProviderStore((state) => state.toggleStatus);
 
     // Get provider object by id
     const providerMap = useMemo(() => {
@@ -28,6 +29,7 @@ export function ConsentDashboard(){
        inactiveConsentCount={getRevokedConsentCount()}
        expiredConsentCount={getExpiredConsentCount()}
        providerMap={providerMap}
+       changeServiceStatus={changeServiceStatus}
        /> 
     );
 }

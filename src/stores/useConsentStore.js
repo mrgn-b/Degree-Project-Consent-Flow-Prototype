@@ -40,7 +40,6 @@ export const useConsentStore = create(
                 serviceId,
                 // For now, all parameters are granted
                 purposes: purposes.map(p => ({ ...p, granted: true })),
-                dataCategories: dataCategories.map(d => ({ ...d, granted: true })),
                 thirdParties: thirdParties.map(t => ({ ...t, granted: true })),
                 status: "active",
                 // For now, expiresAt one year from "now"

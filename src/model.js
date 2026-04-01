@@ -7,14 +7,21 @@ export const model = {
       logoUrl: "/assets/logos/acme.svg",
       status: "inactive",
       purposes: [
-        { id: "analytics", description: "Usage analytics" },
-        { id: "personalization", description: "Personalized recommendations" },
-        { id: "marketing", description: "Marketing insights" }
-      ],
-      dataCategories: [
-        { type: "usage_data" },
-        { type: "location" },
-        { type: "device_info" }
+        {
+          id: "analytics",
+          description: "Usage analytics",
+          dataCategories: ["usage_data", "device_info"]
+        },
+        {
+          id: "personalization",
+          description: "Personalized recommendations",
+          dataCategories: ["usage_data", "location"]
+        },
+        {
+          id: "marketing",
+          description: "Marketing insights",
+          dataCategories: ["usage_data", "location", "device_info"]
+        }
       ],
       thirdParties: [
         { id: "google_analytics", name: "Google Analytics" },
@@ -28,14 +35,9 @@ export const model = {
       logoUrl: "/assets/logos/notifyco.svg",
       status: "inactive",
       purposes: [
-        { id: "messaging", description: "Send notifications" },
-        { id: "alerts", description: "Critical alerts" },
-        { id: "marketing", description: "Promotional messaging" }
-      ],
-      dataCategories: [
-        { type: "contact_info" },
-        { type: "preferences" },
-        { type: "location" }
+        { id: "messaging", description: "Send notifications", dataCategories: ["contact_info", "preferences"] },
+        { id: "alerts", description: "Critical alerts", dataCategories: ["contact_info", "location"] },
+        { id: "marketing", description: "Promotional messaging", dataCategories: ["contact_info", "preferences"] }
       ],
       thirdParties: [
         { id: "onesignal", name: "OneSignal" },
@@ -49,14 +51,9 @@ export const model = {
       logoUrl: "/assets/logos/hair.svg",
       status: "inactive",
       purposes: [
-        { id: "booking", description: "Appointment booking" },
-        { id: "personalization", description: "Personalized recommendations" },
-        { id: "loyalty", description: "Loyalty program" }
-      ],
-      dataCategories: [
-        { type: "contact_info" },
-        { type: "location" },
-        { type: "payment_info" }
+        { id: "booking", description: "Appointment booking", dataCategories: ["contact_info", "location"] },
+        { id: "personalization", description: "Personalized recommendations", dataCategories: ["contact_info"] },
+        { id: "loyalty", description: "Loyalty program", dataCategories: ["contact_info", "payment_info"] }
       ],
       thirdParties: [
         { id: "square", name: "Square Payments" },
@@ -70,14 +67,9 @@ export const model = {
       logoUrl: "/assets/logos/secureprofile.svg",
       status: "inactive",
       purposes: [
-        { id: "authentication", description: "User authentication" },
-        { id: "profile_management", description: "Profile management" },
-        { id: "security_alerts", description: "Security alerts" }
-      ],
-      dataCategories: [
-        { type: "identity_info" },
-        { type: "contact_info" },
-        { type: "security_info" }
+        { id: "authentication", description: "User authentication", dataCategories: ["identity_info", "security_info"] },
+        { id: "profile_management", description: "Profile management", dataCategories: ["identity_info", "contact_info"] },
+        { id: "security_alerts", description: "Security alerts", dataCategories: ["security_info", "contact_info"] }
       ],
       thirdParties: [
         { id: "auth0", name: "Auth0" },
@@ -91,13 +83,8 @@ export const model = {
       logoUrl: "/assets/logos/plumber.svg",
       status: "inactive",
       purposes: [
-        { id: "booking", description: "Appointment scheduling" },
-        { id: "emergency_services", description: "Emergency services" }
-      ],
-      dataCategories: [
-        { type: "contact_info" },
-        { type: "address_info" },
-        { type: "service_history" }
+        { id: "booking", description: "Appointment scheduling", dataCategories: ["contact_info", "address_info"] },
+        { id: "emergency_services", description: "Emergency services", dataCategories: ["contact_info", "service_history"] }
       ],
       thirdParties: [
         { id: "stripe", name: "Stripe Payments" },
@@ -111,15 +98,9 @@ export const model = {
       logoUrl: "/assets/logos/cafe.svg",
       status: "inactive",
       purposes: [
-        { id: "ordering", description: "Order processing" },
-        { id: "delivery_tracking", description: "Track deliveries" },
-        { id: "marketing", description: "Promotions & offers" }
-      ],
-      dataCategories: [
-        { type: "contact_info" },
-        { type: "payment_info" },
-        { type: "order_history" },
-        { type: "location" }
+        { id: "ordering", description: "Order processing", dataCategories: ["contact_info", "payment_info", "order_history"] },
+        { id: "delivery_tracking", description: "Track deliveries", dataCategories: ["contact_info", "location", "order_history"] },
+        { id: "marketing", description: "Promotions & offers", dataCategories: ["contact_info", "preferences"] }
       ],
       thirdParties: [
         { id: "stripe", name: "Stripe Payments" },
@@ -127,7 +108,6 @@ export const model = {
       ]
     }
   ],
-
   consents: [],
 
   /* How consent objects should look like

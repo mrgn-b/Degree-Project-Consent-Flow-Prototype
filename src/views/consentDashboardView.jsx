@@ -128,7 +128,7 @@ export function ConsentDashboardView(props) {
             <p className="text-sm text-gray-600 mt-2">
               Are you sure you want to revoke consent for{" "}
               <span className="font-medium">
-                {selectedConsentToRevoke.service}
+                {props.providerMap[selectedConsentToRevoke.serviceId].name}
               </span>
               ?
             </p>

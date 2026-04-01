@@ -45,7 +45,7 @@ export function ServicePageView(props) {
     <div className="flex flex-col min-h-screen items-center bg-gradient-to-br from-slate-50 to-blue-50 p-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-4">Available Service Providers</h1>
       <p className="text-gray-600 mb-8 text-center max-w-xl">
-        Connect or access the services you use below.
+        Connect and access services.
       </p>
 
       {/* Active Services */}

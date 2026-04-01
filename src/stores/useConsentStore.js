@@ -59,6 +59,14 @@ export const useConsentStore = create(
                 set((state) => ({ consents: [...state.consents, newConsent] }));
             },
 
+            updateConsent: (updatedConsent) => {
+            set((state) => ({
+                consents: state.consents.map((c) =>
+                c.id === updatedConsent.id ? updatedConsent : c
+                ),
+            }));
+            },
+
             setConsents: (consents) => set({ consents }),
 
             // Gets the status of the consent

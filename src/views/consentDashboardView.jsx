@@ -5,7 +5,8 @@ export function ConsentDashboardView(props) {
   const changeServiceStatus= props.changeServiceStatus;
 
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
-  const [selectedConsentToView, setSelectedConsentToView] = useState(null);
+  const [editableConsent, setEditableConsent] = useState(null);
+  const [isEditing, setIsEditing] = useState(null);
 
   const statusStyles = {
     active: "bg-green-100 text-green-700",
@@ -91,7 +92,7 @@ export function ConsentDashboardView(props) {
 
                 <td className="p-4 text-right">
                   <button 
-                  onClick={() => setSelectedConsentToView(c)}
+                  onClick={() => setEditableConsent(c)}
                   className="text-blue-600 text-sm mr-3">
                     View
                   </button>
@@ -151,68 +152,110 @@ export function ConsentDashboardView(props) {
         </div>
       )}
 
-      {/* View Modal */}
-      {selectedConsentToView && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setSelectedConsentToView(null)}
-          />
-          <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">
-            <h2 className="text-lg font-semibold">Consent Details</h2>
-            <p className="text-sm text-gray-600 mt-2">
-              <strong>Service:</strong> {props.providerMap[selectedConsentToView.serviceId].name}
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              <strong>Status:</strong> {props.getConsentStatus(selectedConsentToView)}
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              <strong>Created At:</strong> {selectedConsentToView.timestamps.createdAt}
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              <strong>Updated At:</strong> {selectedConsentToView.timestamps.updatedAt}
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              <strong>Revoked At:</strong> {selectedConsentToView.timestamps.revokedAt ?? "-"}
-            </p>
-            <p className="text-sm text-gray-600 mt-3 font-semibold">Purposes:</p>
-            <ul className="list-disc list-inside text-sm text-gray-600">
-              {selectedConsentToView.purposes.map((p) => (
-                <li key={p.id}>
-                  {p.description} - <strong>{p.granted ? "Granted" : "Denied"}</strong>
-                </li>
-              ))}
-            </ul>
-            <p className="text-sm text-gray-600 mt-3 font-semibold">Data Categories:</p>
-            <ul className="list-disc list-inside text-sm text-gray-600">
-              {selectedConsentToView.dataCategories.map((d, idx) => (
-                <li key={idx}>
-                  {d.type} - <strong>{d.granted ? "Granted" : "Denied"}</strong>
-                </li>
-              ))}
-            </ul>
-            <p className="text-sm text-gray-600 mt-3 font-semibold">Third Parties:</p>
-            <ul className="list-disc list-inside text-sm text-gray-600">
-              {selectedConsentToView.thirdParties.length > 0
-                ? selectedConsentToView.thirdParties.map((t) => (
-                    <li key={t.id}>
-                      {t.name} - <strong>{t.granted ? "Granted" : "Denied"}</strong>
-                    </li>
-                  ))
-                : <li>-</li>
-              }
-            </ul>
-            <div className="flex justify-end gap-3 mt-6">
+    {/* View & Edit Modal */}
+    {editableConsent && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div
+          className="absolute inset-0 bg-black/40"
+          onClick={() => {
+            setEditableConsent(null)
+            setIsEditing(null)
+          }}
+        />
+        <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">
+          <h2 className="text-lg font-semibold">Consent Details</h2>
+          <p className="text-sm text-gray-600 mt-2">
+            <strong>Service:</strong> {props.providerMap[editableConsent.serviceId].name}
+          </p>
+          <p className="text-sm text-gray-600 mt-1">
+            <strong>Status:</strong> {props.getConsentStatus(editableConsent)}
+          </p>
+
+          {/* Toggle for editing */}
+          <div className="mt-4">
+            <button
+              className="px-3 py-1 text-sm rounded-lg border bg-gray-100"
+              onClick={() => setIsEditing((prev) => !prev)}
+            >
+              {isEditing ? "Cancel Edit" : "Modify"}
+            </button>
+          </div>
+
+          {["purposes", "dataCategories", "thirdParties"].map((key) => {
+            const items = editableConsent[key] || [];
+            const title =
+              key === "purposes"
+                ? "Purposes"
+                : key === "dataCategories"
+                ? "Data Categories"
+                : "Third Parties";
+
+            return (
+              <div key={key} className="mt-4">
+                <p className="text-sm text-gray-600 font-semibold">{title}:</p>
+                <ul className="list-disc list-inside text-sm text-gray-600">
+                  {items.length === 0 && <li>-</li>}
+                  {items.map((item, idx) => {
+                    const itemName =
+                      key === "purposes"
+                        ? item.description
+                        : key === "dataCategories"
+                        ? item.type
+                        : item.name;
+
+                    return (
+                      <li key={item.id ?? idx} className="flex justify-between items-center">
+                        <span>
+                          {itemName} - <strong>{item.granted ? "Granted" : "Denied"}</strong>
+                        </span>
+                        {isEditing && (
+                          <input
+                            type="checkbox"
+                            checked={item.granted}
+                            onChange={() => {
+                              setEditableConsent((prev) => ({
+                                ...prev,
+                                [key]: prev[key].map((i, iIdx) =>
+                                  iIdx === idx ? { ...i, granted: !i.granted } : i
+                                ),
+                              }));
+                            }}
+                          />
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
+
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              onClick={() => {
+                setEditableConsent(null)
+                setIsEditing(null)
+              }}
+              className="px-4 py-2 text-sm rounded-lg border"
+            >
+              Close
+            </button>
+            {isEditing && (
               <button
-                onClick={() => setSelectedConsentToView(null)}
-                className="px-4 py-2 text-sm rounded-lg border"
+                onClick={() => {
+                  props.updateConsent(editableConsent);
+                  setEditableConsent(null);
+                  setIsEditing(null);
+                }}
+                className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white"
               >
-                Close
+                Save Changes
               </button>
-            </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
+    )}
       
     </div>
   );

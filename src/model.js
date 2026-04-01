@@ -10,17 +10,20 @@ export const model = {
         {
           id: "analytics",
           description: "Usage analytics",
-          dataCategories: ["usage_data", "device_info"]
+          dataCategories: ["usage_data", "device_info"],
+          required: true
         },
         {
           id: "personalization",
           description: "Personalized recommendations",
-          dataCategories: ["usage_data", "location"]
+          dataCategories: ["usage_data", "location"],
+          required: false
         },
         {
           id: "marketing",
           description: "Marketing insights",
-          dataCategories: ["usage_data", "location", "device_info"]
+          dataCategories: ["usage_data", "location", "device_info"],
+          required: true
         }
       ],
       thirdParties: [
@@ -35,9 +38,24 @@ export const model = {
       logoUrl: "/assets/logos/notifyco.svg",
       status: "inactive",
       purposes: [
-        { id: "messaging", description: "Send notifications", dataCategories: ["contact_info", "preferences"] },
-        { id: "alerts", description: "Critical alerts", dataCategories: ["contact_info", "location"] },
-        { id: "marketing", description: "Promotional messaging", dataCategories: ["contact_info", "preferences"] }
+        {
+          id: "messaging",
+          description: "Send notifications",
+          dataCategories: ["contact_info", "preferences"],
+          required: true 
+        },
+        { 
+          id: "alerts", 
+          description: "Critical alerts", 
+          dataCategories: ["contact_info", "location"],
+          required: true 
+        },
+        { 
+          id: "marketing", 
+          description: "Promotional messaging", 
+          dataCategories: ["contact_info", "preferences"],
+          required: false 
+        }
       ],
       thirdParties: [
         { id: "onesignal", name: "OneSignal" },
@@ -51,9 +69,23 @@ export const model = {
       logoUrl: "/assets/logos/hair.svg",
       status: "inactive",
       purposes: [
-        { id: "booking", description: "Appointment booking", dataCategories: ["contact_info", "location"] },
-        { id: "personalization", description: "Personalized recommendations", dataCategories: ["contact_info"] },
-        { id: "loyalty", description: "Loyalty program", dataCategories: ["contact_info", "payment_info"] }
+        { 
+          id: "booking", 
+          description: "Appointment booking", 
+          dataCategories: ["contact_info", "location"],
+          required: true
+         },
+        { 
+          id: "personalization", 
+          description: "Personalized recommendations", 
+          dataCategories: ["contact_info"], 
+          required: false
+        },
+        { id: "loyalty", 
+          description: "Loyalty program", 
+          dataCategories: ["contact_info", "payment_info"],
+          required: false
+        }
       ],
       thirdParties: [
         { id: "square", name: "Square Payments" },
@@ -67,9 +99,24 @@ export const model = {
       logoUrl: "/assets/logos/secureprofile.svg",
       status: "inactive",
       purposes: [
-        { id: "authentication", description: "User authentication", dataCategories: ["identity_info", "security_info"] },
-        { id: "profile_management", description: "Profile management", dataCategories: ["identity_info", "contact_info"] },
-        { id: "security_alerts", description: "Security alerts", dataCategories: ["security_info", "contact_info"] }
+        { 
+          id: "authentication",
+          description: "User authentication",
+          dataCategories: ["identity_info", "security_info"],
+          required: true
+          },
+        { 
+          id: "profile_management", 
+          description: "Profile management", 
+          dataCategories: ["identity_info", "contact_info"],
+          required: false
+        },
+        { 
+          id: "security_alerts", 
+          description: "Security alerts", 
+          dataCategories: ["security_info", "contact_info"],
+          required: true
+        }
       ],
       thirdParties: [
         { id: "auth0", name: "Auth0" },
@@ -83,8 +130,18 @@ export const model = {
       logoUrl: "/assets/logos/plumber.svg",
       status: "inactive",
       purposes: [
-        { id: "booking", description: "Appointment scheduling", dataCategories: ["contact_info", "address_info"] },
-        { id: "emergency_services", description: "Emergency services", dataCategories: ["contact_info", "service_history"] }
+        { 
+          id: "booking",
+          description: "Appointment scheduling", 
+          dataCategories: ["contact_info", "address_info"],
+          required: true
+        },
+        { 
+          id: "emergency_services", 
+          description: "Emergency services", 
+          dataCategories: ["contact_info", "service_history"], 
+          required: false
+        }
       ],
       thirdParties: [
         { id: "stripe", name: "Stripe Payments" },
@@ -98,9 +155,23 @@ export const model = {
       logoUrl: "/assets/logos/cafe.svg",
       status: "inactive",
       purposes: [
-        { id: "ordering", description: "Order processing", dataCategories: ["contact_info", "payment_info", "order_history"] },
-        { id: "delivery_tracking", description: "Track deliveries", dataCategories: ["contact_info", "location", "order_history"] },
-        { id: "marketing", description: "Promotions & offers", dataCategories: ["contact_info", "preferences"] }
+        { 
+          id: "ordering", 
+          description: "Order processing", 
+          dataCategories: ["contact_info", "payment_info", "order_history"], 
+          required: true
+        },
+        { id: "delivery_tracking", 
+          description: "Track deliveries", 
+          dataCategories: ["contact_info", "location", "order_history"],
+          required: true
+        },
+        { 
+          id: "marketing", 
+          description: "Promotions & offers", 
+          dataCategories: ["contact_info", "preferences"],
+          required: false
+        }
       ],
       thirdParties: [
         { id: "stripe", name: "Stripe Payments" },

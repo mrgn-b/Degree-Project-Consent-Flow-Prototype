@@ -198,18 +198,27 @@ export function ConsentDashboardView(props) {
                         {p.description} - <strong>{p.granted ? "Granted" : "Denied"}</strong>
                       </span>
                       {isEditing && (
-                        <input
-                          type="checkbox"
-                          checked={p.granted}
-                          onChange={() =>
-                            setEditableConsent((prev) => ({
-                              ...prev,
-                              purposes: prev.purposes.map((pp) =>
-                                pp.id === p.id ? { ...pp, granted: !pp.granted } : pp
-                              ),
-                            }))
-                          }
-                        />
+                        <div className="relative group">
+                          <input
+                            type="checkbox"
+                            checked={p.granted}
+                            disabled={p.required}
+                            onChange={() =>
+                              setEditableConsent((prev) => ({
+                                ...prev,
+                                purposes: prev.purposes.map((pp) =>
+                                  pp.id === p.id ? { ...pp, granted: !pp.granted } : pp
+                                ),
+                              }))
+                            }
+                            className="disabled:cursor-not-allowed disabled:opacity-50"
+                          />
+                          {p.required && (
+                            <div className="fixed hidden group-hover:block bg-gray-700 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-[9999]">
+                              This purpose is required and cannot be changed
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
 

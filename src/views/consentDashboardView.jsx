@@ -83,11 +83,11 @@ export function ConsentDashboardView(props) {
                   </span>
                 </td>
 
-                <td className="p-4">{c.timestamps.updatedAt}</td>
-                <td className="p-4">{c.timestamps.expiresAt}</td>
+                <td className="p-4">{new Date(c.timestamps.updatedAt).toLocaleString()}</td>
+                <td className="p-4">{new Date(c.timestamps.expiresAt).toLocaleString()}</td>
 
                 <td className="p-4">
-                    {c.timestamps.revokedAt ? c.timestamps.revokedAt : "-"}
+                    {c.timestamps.revokedAt ? new Date(c.timestamps.revokedAt).toLocaleString() : "-"}
                 </td>
 
                 <td className="p-4 text-right">
@@ -169,6 +169,9 @@ export function ConsentDashboardView(props) {
             <h2 className="text-lg font-semibold">Consent Details</h2>
             <p className="text-sm text-gray-600 mt-2">
               <strong>Service:</strong> {props.providerMap[editableConsent.serviceId].name}
+            </p>
+            <p className="text-sm text-gray-600 mt-1">
+              <strong>Consent ID:</strong> {editableConsent.id}
             </p>
             <p className="text-sm text-gray-600 mt-1">
               <strong>Status:</strong> {props.getConsentStatus(editableConsent)}

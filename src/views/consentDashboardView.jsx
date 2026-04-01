@@ -174,15 +174,17 @@ export function ConsentDashboardView(props) {
               <strong>Status:</strong> {props.getConsentStatus(editableConsent)}
             </p>
 
-            {/* Toggle for editing */}
-            <div className="mt-4">
-              <button
-                className="px-3 py-1 text-sm rounded-lg border bg-gray-100"
-                onClick={() => setIsEditing((prev) => !prev)}
-              >
-                {isEditing ? "Cancel Edit" : "Modify"}
-              </button>
-            </div>
+            {/* Toggle for editing */
+              props.getConsentStatus(editableConsent) == "active" && 
+              <div className="mt-4">
+                <button
+                  className="px-3 py-1 text-sm rounded-lg border bg-gray-100"
+                  onClick={() => setIsEditing((prev) => !prev)}
+                >
+                  {isEditing ? "Cancel Edit" : "Modify"}
+                </button>
+              </div>
+            }
 
             {/* Purposes + Linked Data Categories */}
             <div className="mt-4">

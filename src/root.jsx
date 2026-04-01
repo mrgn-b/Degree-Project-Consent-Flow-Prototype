@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { MainPage } from "./presenters/mainPagePresenter";
 import { ServicePage } from "./presenters/servicePagePresenter";
 import { ConsentDashboard } from "./presenters/consentDashboardPresenter";
+import { ConsentHistoryPage } from "./presenters/consentHistoryPagePresenter";
 
 export function Root(props){
     return (
@@ -20,6 +21,7 @@ export function Root(props){
                 <Route path="/" element={<MainPage />} />
                 <Route path="/services" element={<ServicePage model={props.model}/>} />
                 <Route path="/consent-dashboard" element={<ConsentDashboard />} />
+                <Route path="/consent-history" element={<ConsentHistoryPage />} />
                 {/* TODO: Add dashboard and audit pages */}
             </Routes>
         </Router>

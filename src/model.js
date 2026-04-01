@@ -180,6 +180,7 @@ export const model = {
     }
   ],
   consents: [],
+  consentActions: [],
 
   /* How consent objects should look like
   consents: [

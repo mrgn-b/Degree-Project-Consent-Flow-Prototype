@@ -83,7 +83,7 @@ export const useConsentStore = create(
 
                 const action = {
                     id: nanoid(),
-                    consentID: newConsent.id,
+                    consentId: newConsent.id,
                     type: "created",
                     timestamp: new Date().toISOString(),
                     actor: "user",

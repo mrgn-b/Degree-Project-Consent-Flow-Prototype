@@ -24,7 +24,9 @@ export function ConsentHistoryPageView(props) {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6">Consent History</h1>
+      <h1 className="text-2xl font-semibold">Consent History</h1>
+      <p className="text-gray-500 text-sm mb-6">
+            See all your consent actions</p>
 
       <div className="relative border-l border-gray-200 pl-6 space-y-6">
         {actions.map((action) => (
@@ -116,6 +118,11 @@ export function ConsentHistoryPageView(props) {
                   No detailed changes recorded
                 </p>
               )}
+
+              {/* Consent ID*/}
+              <p className="text-xs text-gray-500 mt-2">
+                Consent ID: {action.consentId}
+              </p>
             </div>
           </div>
         ))}

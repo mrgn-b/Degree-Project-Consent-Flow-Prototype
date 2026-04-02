@@ -21,6 +21,8 @@ export function ConsentHistoryPageView(props) {
         return "Consent Revoked";
       case "unrevoked":
         return "Consent Unrevoked";
+      case "expired":
+        return "Consent Expired";
       default:
         return type;
     }

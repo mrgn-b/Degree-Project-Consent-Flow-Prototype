@@ -2,218 +2,237 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { model } from "../model";
 import { nanoid } from "nanoid";
+import { useServiceProviderStore } from "./useServiceProviderStore";
 
 export const useConsentStore = create(
     persist(
-        (set, get) => ({
-            consents: model.consents,
-            consentActions: model.consentActions,
+        (set, get) => {
+            // Track expiration timers to avoid duplicates
+            const expirationTimers = {};
 
-            // Revokes consent if active
-            // If not active unrevoke consent
-            toggleConsentRevocation: (id) => {
-            set((state) => {
-                const now = new Date().toISOString();
+            // Schedule a timer for a single consent expiration
+            const scheduleExpiration = (consent) => {
+            const expiresAt = new Date(consent.timestamps.expiresAt).getTime();
+            const now = Date.now();
+            const msUntilExpiration = expiresAt - now;
 
-                let newAction = null;
+            if (msUntilExpiration > 0) {
+                if (expirationTimers[consent.id]) clearTimeout(expirationTimers[consent.id]);
 
-                const updatedConsents = state.consents.map((c) => {
-                if (c.id !== id) return c;
+                expirationTimers[consent.id] = setTimeout(() => {
+                const nowISO = new Date().toISOString();
 
-                const isRevoked = !!c.timestamps.revokedAt;
+                set((state) => {
+                    const updatedConsents = state.consents.map((c) =>
+                    c.id === consent.id ? { ...c, timestamps: { ...c.timestamps, updatedAt: nowISO } } : c
+                    );
 
-                const updatedConsent = {
-                    ...c,
-                    timestamps: {
-                    ...c.timestamps,
-                    revokedAt: isRevoked ? null : now,
-                    updatedAt: now,
-                    },
-                };
-
-                // Create action
-                newAction = {
+                    const expiredAction = {
                     id: nanoid(),
-                    consentId: c.id,
-                    type: isRevoked ? "unrevoked" : "revoked",
-                    timestamp: now,
-                    actor: "user",
+                    consentId: consent.id,
+                    type: "expired",
+                    timestamp: nowISO,
+                    actor: "system",
                     changes: null,
-                    metadata: {
-                        source: "Dashboard"
-                    }
-                };
+                    metadata: { source: "Expiration Timer" },
+                    };
 
-                return updatedConsent;
+                    return {
+                    consents: updatedConsents,
+                    consentActions: [...state.consentActions, expiredAction],
+                    };
                 });
 
-                return {
-                consents: updatedConsents,
-                consentActions: newAction
-                    ? [...state.consentActions, newAction]
-                    : state.consentActions,
-                };
-            });
-            },
+                // Update service status
+                useServiceProviderStore.getState().toggleStatus(consent.serviceId);
 
-
-            // Add a new consent
-            createConsent: (serviceId, purposes = [], dataCategories = [], thirdParties = []) => {
-                const now = new Date().toISOString();
-                const oneYearLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString();
-                const newConsent = {
-                id: nanoid(),
-                serviceId,
-                // For now, all parameters are granted
-                purposes: purposes.map(p => ({ ...p, granted: true })),
-                thirdParties: thirdParties.map(t => ({ ...t, granted: true })),
-                status: "active",
-                // For now, expiresAt one year from "now"
-                timestamps: {
-                    createdAt: now,
-                    updatedAt: now,
-                    expiresAt: oneYearLater,
-                    revokedAt: null
-                },
-                metadata: {
-                    version: "1.0",
-                    consentMethod: "explicit"
-                }
-                };
-
-                const action = {
-                    id: nanoid(),
-                    consentId: newConsent.id,
-                    type: "created",
-                    timestamp: new Date().toISOString(),
-                    actor: "user",
-                    changes: null,
-                    metadata: {
-                        source: "Service Page"
-                    }
-                }
-
-                set((state) => ({ 
-                    consents: [...state.consents, newConsent], 
-                    consentActions: [...state.consentActions, action]
-                }));
-            },
-
-            // Update consent
-            updateConsent: (updatedConsent) => {
-            const originalConsent = get().consents.find(
-                (c) => c.id === updatedConsent.id
-            );
-
-            if (!originalConsent) return;
-
-            const now = new Date().toISOString();
-
-            // PURPOSE CHANGES
-            const purposeChanges = updatedConsent.purposes
-                .map((p) => {
-                const original = originalConsent.purposes.find(
-                    (op) => op.id === p.id
-                );
-
-                if (!original || original.granted === p.granted) return null;
-
-                return {
-                    id: p.id,
-                    description: p.description,
-                    from: original.granted,
-                    to: p.granted,
-                };
-                })
-                .filter(Boolean);
-
-            // THIRD PARTY CHANGES
-            const thirdPartyChanges = updatedConsent.thirdParties
-                .map((t) => {
-                const original = originalConsent.thirdParties.find(
-                    (ot) => ot.id === t.id
-                );
-
-                if (!original || original.granted === t.granted) return null;
-
-                return {
-                    id: t.id,
-                    from: original.granted,
-                    to: t.granted,
-                };
-                })
-                .filter(Boolean);
-
-            // BUILD CHANGES OBJECT
-            const changes = {};
-
-            if (purposeChanges.length > 0) {
-                changes.purposes = purposeChanges;
+                delete expirationTimers[consent.id];
+                }, msUntilExpiration);
             }
-
-            if (thirdPartyChanges.length > 0) {
-                changes.thirdParties = thirdPartyChanges;
-            }
-
-            // If nothing changed -> don't log action
-            if (Object.keys(changes).length === 0) return;
-
-            const action = {
-                id: nanoid(),
-                consentId: updatedConsent.id,
-                type: "updated",
-                timestamp: now,
-                actor: "user",
-                changes,
-                metadata: {
-                    source: "Dashboard"
-                }
             };
 
-            // UPDATE STATE
-            set((state) => ({
-                consents: state.consents.map((c) =>
-                c.id === updatedConsent.id
-                    ? {
-                        ...updatedConsent,
+            // Schedule expiration timers for all consents
+            const scheduleAllExpirations = () => {
+                get().consents.forEach(scheduleExpiration);
+            };
+
+            return {
+                consents: model.consents,
+                consentActions: model.consentActions,
+
+                // Revokes consent if active
+                // If not active unrevoke consent
+                toggleConsentRevocation: (id) => {
+                    set((state) => {
+                        const now = new Date().toISOString();
+                        let newAction = null;
+
+                        const updatedConsents = state.consents.map((c) => {
+                            if (c.id !== id) return c;
+
+                            const isRevoked = !!c.timestamps.revokedAt;
+
+                            const updatedConsent = {
+                                ...c,
+                                timestamps: {
+                                    ...c.timestamps,
+                                    revokedAt: isRevoked ? null : now,
+                                    updatedAt: now,
+                                },
+                            };
+
+                            newAction = {
+                                id: nanoid(),
+                                consentId: c.id,
+                                type: isRevoked ? "unrevoked" : "revoked",
+                                timestamp: now,
+                                actor: "user",
+                                changes: null,
+                                metadata: { source: "Dashboard" },
+                            };
+
+                            return updatedConsent;
+                        });
+
+                        return {
+                            consents: updatedConsents,
+                            consentActions: newAction
+                                ? [...state.consentActions, newAction]
+                                : state.consentActions,
+                        };
+                    });
+                },
+
+                // Add a new consent
+                createConsent: (serviceId, purposes = [], dataCategories = [], thirdParties = []) => {
+                    const now = new Date().toISOString();
+                    const oneYearLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString();
+                    const oneMinuteLater = new Date(Date.now() + 1 * 60 * 1000).toISOString(); // test: 1 min expiration
+
+                    const newConsent = {
+                        id: nanoid(),
+                        serviceId,
+                        // For now, all parameters are granted
+                        purposes: purposes.map(p => ({ ...p, granted: true })),
+                        thirdParties: thirdParties.map(t => ({ ...t, granted: true })),
+                        status: "active",
+                        // For now, expiresAt one year from "now"
                         timestamps: {
-                        ...updatedConsent.timestamps,
-                        updatedAt: now,
+                            createdAt: now,
+                            updatedAt: now,
+                            expiresAt: oneYearLater, // change to oneMinuteLater to test expiration functionality
+                            revokedAt: null,
                         },
+                        metadata: { version: "1.0", consentMethod: "explicit" },
+                    };
+
+                    const action = {
+                        id: nanoid(),
+                        consentId: newConsent.id,
+                        type: "created",
+                        timestamp: now,
+                        actor: "user",
+                        changes: null,
+                        metadata: { source: "Service Page" },
+                    };
+
+                    set((state) => ({
+                        consents: [...state.consents, newConsent],
+                        consentActions: [...state.consentActions, action],
+                    }));
+
+                    scheduleExpiration(newConsent);
+                },
+
+                // Update consent
+                updateConsent: (updatedConsent) => {
+                    const originalConsent = get().consents.find(c => c.id === updatedConsent.id);
+                    if (!originalConsent) return;
+                    const now = new Date().toISOString();
+
+                    const purposeChanges = updatedConsent.purposes
+                        .map(p => {
+                            const original = originalConsent.purposes.find(op => op.id === p.id);
+                            if (!original || original.granted === p.granted) return null;
+                            return { id: p.id, description: p.description, from: original.granted, to: p.granted };
+                        })
+                        .filter(Boolean);
+
+                    const thirdPartyChanges = updatedConsent.thirdParties
+                        .map(t => {
+                            const original = originalConsent.thirdParties.find(ot => ot.id === t.id);
+                            if (!original || original.granted === t.granted) return null;
+                            return { id: t.id, from: original.granted, to: t.granted };
+                        })
+                        .filter(Boolean);
+
+                    const changes = {};
+                    if (purposeChanges.length > 0) changes.purposes = purposeChanges;
+                    if (thirdPartyChanges.length > 0) changes.thirdParties = thirdPartyChanges;
+                    if (Object.keys(changes).length === 0) return;
+
+                    const action = {
+                        id: nanoid(),
+                        consentId: updatedConsent.id,
+                        type: "updated",
+                        timestamp: now,
+                        actor: "user",
+                        changes,
+                        metadata: { source: "Dashboard" },
+                    };
+
+                    set((state) => ({
+                        consents: state.consents.map(c =>
+                            c.id === updatedConsent.id
+                                ? { ...updatedConsent, timestamps: { ...updatedConsent.timestamps, updatedAt: now } }
+                                : c
+                        ),
+                        consentActions: [...state.consentActions, action],
+                    }));
+
+                    if (originalConsent.timestamps.expiresAt !== updatedConsent.timestamps.expiresAt) {
+                        scheduleExpiration(updatedConsent);
                     }
-                    : c
-                ),
-                consentActions: [...state.consentActions, action],
-            }));
-            },
+                },
 
-            setConsents: (consents) => set({ consents }),
+                setConsents: (consents) => {
+                    set({ consents });
+                    scheduleAllExpirations();
+                },
 
-            // Gets the status of the consent
-            getStatus: (consent) => {
-                if (consent.timestamps.revokedAt) return "revoked";
+                // Gets the status of the consent
+                getStatus: (consent) => {
+                    if (consent.timestamps.revokedAt) return "revoked";
+                    if (consent.timestamps?.expiresAt && new Date(consent.timestamps.expiresAt) < new Date())
+                        return "expired";
+                    return "active";
+                },
 
-                if (
-                consent.timestamps?.expiresAt &&
-                new Date(consent.timestamps.expiresAt) < new Date()
-                ) {
-                return "expired";
-                }
+                getActiveCount: () =>
+                    get().consents.filter(c => get().getStatus(c) === "active").length,
 
-                return "active";
-            },
+                getRevokedCount: () =>
+                    get().consents.filter(c => get().getStatus(c) === "revoked").length,
 
-            getActiveCount: () =>
-                get().consents.filter((c) => get().getStatus(c) === "active").length,
-            
-            getRevokedCount: () =>
-                get().consents.filter((c) => get().getStatus(c) === "revoked").length,
-            
-            getExpiredCount: () =>
-                get().consents.filter((c) => get().getStatus(c) === "expired").length,
-        }),
-        {
-            name: "consents" // localStorage key
-        }
+                getExpiredCount: () =>
+                    get().consents.filter(c => get().getStatus(c) === "expired").length,
+
+                scheduleAllExpirations,
+            };
+        },
+        { name: "consents" }
     )
+);
+
+// Subscribe to consents changes to handle new or updated expirations
+useConsentStore.subscribe(
+    (state) => state.consents,
+    (consents, previous) => {
+        consents.forEach(c => {
+            const prev = previous?.find(p => p.id === c.id);
+            if (!prev || prev.timestamps.expiresAt !== c.timestamps.expiresAt) {
+                useConsentStore.getState().scheduleAllExpirations();
+            }
+        });
+    }
 );

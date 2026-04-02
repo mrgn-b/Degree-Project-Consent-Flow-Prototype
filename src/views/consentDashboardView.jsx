@@ -248,9 +248,9 @@ export function ConsentDashboardView(props) {
                       <div className="flex justify-between items-center">
                         <span className="flex items-center gap-2">
                           <span className="w-2 h-2 rounded-full bg-gray-600 inline-block" />
-                          {t.name} - <strong>{t.granted ? "Granted" : "Denied"}</strong>
+                          {t.name} {/* - <strong>{t.granted ? "Granted" : "Denied"}</strong> */}
                         </span>
-                        {isEditing && (
+{/*                         {isEditing && (
                           <input
                             type="checkbox"
                             checked={t.granted}
@@ -263,7 +263,7 @@ export function ConsentDashboardView(props) {
                               }))
                             }
                           />
-                        )}
+                        )} */}
                       </div>
                     </li>
                   ))

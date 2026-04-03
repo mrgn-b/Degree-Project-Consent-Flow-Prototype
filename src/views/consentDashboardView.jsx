@@ -7,6 +7,7 @@ export function ConsentDashboardView(props) {
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
   const [editableConsent, setEditableConsent] = useState(null);
   const [isEditing, setIsEditing] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const statusStyles = {
     active: "bg-green-100 text-green-700",
@@ -36,7 +37,11 @@ export function ConsentDashboardView(props) {
         <div className={`w-10 h-10 rounded-full ${colorMap[color]}`} />
         </div>
     );
-    }
+  }
+
+  const filteredConsents = 
+    statusFilter === "all" ? consents : 
+      consents.filter((c) => props.getConsentStatus(c) == statusFilter);
 
   return (
     <div className="p-6 space-y-6">
@@ -49,6 +54,25 @@ export function ConsentDashboardView(props) {
           </p>
         </div>
       </div>
+
+
+    {/* Filter Dropdown */}
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-gray-500">Filter by:</span>
+
+      <select
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+        className="text-sm bg-white border border-gray-200 rounded-lg px-3 py-1.5 shadow-sm
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300
+          transition cursor-pointer"
+      >
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="revoked">Revoked</option>
+        <option value="expired">Expired</option>
+      </select>
+    </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
@@ -71,7 +95,7 @@ export function ConsentDashboardView(props) {
             </tr>
           </thead>
           <tbody>
-            {consents.map((c) => (
+            {filteredConsents.map((c) => (
               <tr key={c.id} className="border-t">
                 <td className="p-4">{props.providerMap[c.serviceId].name}</td>
 

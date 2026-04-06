@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ConsentDetailsModal } from "../modals/ConsentDetailsModal";
+
 
 export function ConsentDashboardView(props) {
   const consents = props.consents;
@@ -176,155 +178,14 @@ export function ConsentDashboardView(props) {
         </div>
       )}
 
-      {/* View & Edit Modal */}
-      {editableConsent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Overlay */}
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => {
-              setEditableConsent(null);
-              setIsEditing(false);
-            }}
-          />
-
-          {/* Modal */}
-          <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">
-            <h2 className="text-lg font-semibold">Consent Details</h2>
-            <p className="text-sm text-gray-600 mt-2">
-              <strong>Service:</strong> {props.providerMap[editableConsent.serviceId].name}
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              <strong>Consent ID:</strong> {editableConsent.id}
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              <strong>Status:</strong> {props.getConsentStatus(editableConsent)}
-            </p>
-
-            {/* Toggle for editing */
-              props.getConsentStatus(editableConsent) == "active" && 
-              <div className="mt-4">
-                <button
-                  className="px-3 py-1 text-sm rounded-lg border bg-gray-100"
-                  onClick={() => setIsEditing((prev) => !prev)}
-                >
-                  {isEditing ? "Cancel Edit" : "Modify"}
-                </button>
-              </div>
-            }
-
-            {/* Purposes + Linked Data Categories */}
-            <div className="mt-4">
-              <p className="text-sm text-gray-600 font-semibold">Purposes:</p>
-              <ul className="list-none mt-2 space-y-2">
-                {editableConsent.purposes.map((p) => (
-                  <li key={p.id}>
-                    <div className="flex justify-between items-center">
-                      <span className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-gray-600 inline-block" />
-                        {p.description} - <strong>{p.granted ? "Granted" : "Denied"}</strong>
-                      </span>
-                      {isEditing && (
-                        <div className="relative group">
-                          <input
-                            type="checkbox"
-                            checked={p.granted}
-                            disabled={p.required}
-                            onChange={() =>
-                              setEditableConsent((prev) => ({
-                                ...prev,
-                                purposes: prev.purposes.map((pp) =>
-                                  pp.id === p.id ? { ...pp, granted: !pp.granted } : pp
-                                ),
-                              }))
-                            }
-                            className="disabled:cursor-not-allowed disabled:opacity-50"
-                          />
-                          {p.required && (
-                            <div className="fixed hidden group-hover:block bg-gray-700 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-[9999]">
-                              This purpose is required and cannot be changed
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Linked Data Categories */}
-                    {p.dataCategories?.length > 0 && (
-                      <ul className="ml-6 mt-1 list-disc list-inside text-gray-500 text-xs">
-                        {p.dataCategories.map((dc, idx) => (
-                          <li key={idx}>{dc}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Third Parties */}
-            <div className="mt-4">
-              <p className="text-sm text-gray-600 font-semibold">Third Parties:</p>
-              <ul className="list-none mt-2 space-y-2">
-                {editableConsent.thirdParties.length > 0 ? (
-                  editableConsent.thirdParties.map((t) => (
-                    <li key={t.id}>
-                      <div className="flex justify-between items-center">
-                        <span className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-gray-600 inline-block" />
-                          {t.name} {/* - <strong>{t.granted ? "Granted" : "Denied"}</strong> */}
-                        </span>
-{/*                         {isEditing && (
-                          <input
-                            type="checkbox"
-                            checked={t.granted}
-                            onChange={() =>
-                              setEditableConsent((prev) => ({
-                                ...prev,
-                                thirdParties: prev.thirdParties.map((tt) =>
-                                  tt.id === t.id ? { ...tt, granted: !tt.granted } : tt
-                                ),
-                              }))
-                            }
-                          />
-                        )} */}
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <li>-</li>
-                )}
-              </ul>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => {
-                  setEditableConsent(null);
-                  setIsEditing(false);
-                }}
-                className="px-4 py-2 text-sm rounded-lg border"
-              >
-                Close
-              </button>
-              {isEditing && (
-                <button
-                  onClick={() => {
-                    props.updateConsent(editableConsent);
-                    setEditableConsent(null);
-                    setIsEditing(false);
-                  }}
-                  className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white"
-                >
-                  Save Changes
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-      
+            {/* Consent Details Modal */}
+      <ConsentDetailsModal
+        consent={editableConsent}
+        providerMap={props.providerMap}
+        getConsentStatus={props.getConsentStatus}
+        updateConsent={props.updateConsent}
+        onClose={() => setEditableConsent(null)}
+      />
     </div>
   );
 }

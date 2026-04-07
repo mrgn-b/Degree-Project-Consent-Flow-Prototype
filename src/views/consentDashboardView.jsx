@@ -5,6 +5,7 @@ import { ConsentDetailsModal } from "../modals/ConsentDetailsModal";
 export function ConsentDashboardView(props) {
   const consents = props.consents;
   const changeServiceStatus= props.changeServiceStatus;
+  const requestMap = props.requestMap;
 
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
   const [editableConsent, setEditableConsent] = useState(null);
@@ -99,7 +100,7 @@ export function ConsentDashboardView(props) {
           <tbody>
             {filteredConsents.map((c) => (
               <tr key={c.id} className="border-t">
-                <td className="p-4">{props.providerMap[c.serviceId].name}</td>
+                <td className="p-4">{c.metadata.source === "Service Page" ? props.providerMap[c.serviceId].name : requestMap[c.serviceId].name }</td>
 
                 <td className="p-4">
                   <span
@@ -154,7 +155,7 @@ export function ConsentDashboardView(props) {
             <p className="text-sm text-gray-600 mt-2">
               Are you sure you want to revoke consent for{" "}
               <span className="font-medium">
-                {props.providerMap[selectedConsentToRevoke.serviceId].name}
+                {selectedConsentToRevoke.metadata.source === "Service Page" ? props.providerMap[selectedConsentToRevoke.serviceId].name : requestMap[selectedConsentToRevoke.serviceId].name}
               </span>
               ?
             </p>
@@ -183,6 +184,7 @@ export function ConsentDashboardView(props) {
         <ConsentDetailsModal
           consent={editableConsent}
           providerMap={props.providerMap}
+          requestMap={requestMap}
           getConsentStatus={props.getConsentStatus}
           updateConsent={props.updateConsent}
           onClose={() => setEditableConsent(null)}

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 export function ConsentDetailsModal({
   consent,
   providerMap,
+  requestMap,
   getConsentStatus,
   updateConsent,
   onClose,
@@ -56,7 +57,7 @@ export function ConsentDetailsModal({
           {isNewConsent ? "Create Consent" : "Consent Details"}
         </h2>
         <p className="text-sm text-gray-600 mt-2">
-          <strong>Service:</strong> {providerMap[editableConsent.serviceId]?.name || "Unknown Service"}
+          <strong>Service:</strong> {providerMap[editableConsent.serviceId]?.name || requestMap[editableConsent.serviceId]?.name || "Unknown Service"}
         </p>
         {!isNewConsent && (
           <>

@@ -4,6 +4,7 @@ export function ConsentHistoryPageView(props) {
   const [timeFilter, setTimeFilter] = useState("all"); // default filter: All
   const consentMap = props.consentMap;
   const providerMap = props.providerMap;
+  const requestMap = props.requestMap;
 
   const actions = [...props.actions].sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
@@ -92,7 +93,7 @@ export function ConsentHistoryPageView(props) {
             {/* Card */}
             <div className="bg-white shadow rounded-xl p-4">
               <div className="flex justify-between items-center">
-                <p className="font-medium text-gray-800">{getActionLabel(action.type)} for {providerMap[consentMap[action.consentId].serviceId].name}</p>
+                <p className="font-medium text-gray-800">{getActionLabel(action.type)} for {action.consentType === "service" ? providerMap[consentMap[action.consentId].serviceId].name : requestMap[consentMap[action.consentId].serviceId].name}</p>
                 <p className="text-xs text-gray-500">{formatDate(action.timestamp)}</p>
               </div>
 

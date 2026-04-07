@@ -181,6 +181,155 @@ export const model = {
   ],
   consents: [],
   consentActions: [],
+  
+  dataRequests: [
+    {
+      id: "fitness_rewards",
+      name: "FitTrack Rewards",
+      description: "Share fitness data to earn wellness points",
+      logoUrl: "/assets/logos/fitness.svg",
+      status: "available",
+      reward: "500 wellness points",
+      duration: {
+        value: 2,
+        unit: "months"
+      },
+      purposes: [
+        {
+          id: "activity_tracking",
+          description: "Analyze physical activity",
+          dataCategories: ["health_data", "device_info"],
+          required: true
+        },
+      ],
+      thirdParties: [
+        { id: "fitbit", name: "Fitbit" },
+        { id: "apple_health", name: "Apple HealthKit" }
+      ]
+    },
+
+    {
+      id: "retail_discounts",
+      name: "ShopSmart Insights",
+      description: "Share purchase behavior for exclusive discounts",
+      logoUrl: "/assets/logos/shop.svg",
+      status: "available",
+      reward: "10% discount coupon",
+      duration: {
+        value: 14,
+        unit: "days"
+      },
+      purposes: [
+        {
+          id: "purchase_analysis",
+          description: "Analyze purchase history",
+          dataCategories: ["transaction_data", "product_usage"],
+          required: true
+        },
+      ],
+      thirdParties: [
+        { id: "stripe", name: "Stripe" },
+        { id: "segment", name: "Segment" }
+      ]
+    },
+
+    {
+      id: "location_rewards",
+      name: "CityPerks",
+      description: "Share location data for local offers",
+      logoUrl: "/assets/logos/location.svg",
+      status: "available",
+      reward: "Free coffee voucher",
+      duration: {
+        value: 7,
+        unit: "days"
+      },
+      purposes: [
+        {
+          id: "location_tracking",
+          description: "Track location for nearby deals",
+          dataCategories: ["location"],
+          required: true
+        }
+      ],
+      thirdParties: [
+        { id: "google_maps", name: "Google Maps API" }
+      ]
+    },
+
+    {
+      id: "media_feedback",
+      name: "StreamInsights",
+      description: "Share viewing habits for premium access",
+      logoUrl: "/assets/logos/media.svg",
+      status: "available",
+      reward: "1 month premium subscription",
+      duration: {
+        value: 4,
+        unit: "hours"
+      },
+      purposes: [
+        {
+          id: "content_analysis",
+          description: "Analyze viewing behavior",
+          dataCategories: ["usage_data", "preferences"],
+          required: true
+        },
+      ],
+      thirdParties: [
+        { id: "netflix_analytics", name: "Netflix Analytics" }
+      ]
+    },
+
+    {
+      id: "survey_rewards",
+      name: "OpinionHub",
+      description: "Answer surveys and share opinions for gift cards",
+      logoUrl: "/assets/logos/survey.svg",
+      status: "available",
+      reward: "$5 gift card",
+      duration: {
+        value: 2,
+        unit: "minutes"
+      },
+      purposes: [
+        {
+          id: "survey_analysis",
+          description: "Analyze survey responses",
+          dataCategories: ["preferences", "demographics"],
+          required: true
+        }
+      ],
+      thirdParties: [
+        { id: "qualtrics", name: "Qualtrics" }
+      ]
+    },
+
+    {
+      id: "transport_rewards",
+      name: "MoveSmart",
+      description: "Share mobility data for travel rewards",
+      logoUrl: "/assets/logos/transport.svg",
+      status: "available",
+      reward: "Free transit pass (1 day)",
+      duration: {
+        value: 3,
+        unit: "days"
+      },
+      purposes: [
+        {
+          id: "mobility_tracking",
+          description: "Analyze commuting patterns",
+          dataCategories: ["location", "usage_data"],
+          required: true
+        }
+      ],
+      thirdParties: [
+        { id: "uber", name: "Uber" },
+        { id: "google_maps", name: "Google Maps API" }
+      ]
+    }
+  ]
 
   /* How consent objects should look like
   consents: [

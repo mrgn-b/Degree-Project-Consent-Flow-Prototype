@@ -3,6 +3,7 @@ import { MainPage } from "./presenters/mainPagePresenter";
 import { ServicePage } from "./presenters/servicePagePresenter";
 import { ConsentDashboard } from "./presenters/consentDashboardPresenter";
 import { ConsentHistoryPage } from "./presenters/consentHistoryPagePresenter";
+import { DataRequestsPage } from "./presenters/dataRequestsPagePresenter";
 
 export function Root(props){
     return (
@@ -22,7 +23,7 @@ export function Root(props){
                 <Route path="/services" element={<ServicePage model={props.model}/>} />
                 <Route path="/consent-dashboard" element={<ConsentDashboard />} />
                 <Route path="/consent-history" element={<ConsentHistoryPage />} />
-                {/* TODO: Add dashboard and audit pages */}
+                <Route path="/data-requests" element={<DataRequestsPage />} />
             </Routes>
         </Router>
     );

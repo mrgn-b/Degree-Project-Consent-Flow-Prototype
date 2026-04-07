@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { model } from "../model";
 import { nanoid } from "nanoid";
 import { useServiceProviderStore } from "./useServiceProviderStore";
+import { calculateExpirationDate } from "../utilities";
 
 export const useConsentStore = create(
     persist(
@@ -30,6 +31,7 @@ export const useConsentStore = create(
                     const expiredAction = {
                     id: nanoid(),
                     consentId: consent.id,
+                    consentType: consent.metadata.source === "Service Page" ? "service" : "request",
                     type: "expired",
                     timestamp: nowISO,
                     actor: "system",
@@ -84,6 +86,7 @@ export const useConsentStore = create(
                             newAction = {
                                 id: nanoid(),
                                 consentId: c.id,
+                                consentType: c.metadata.source === "Service Page" ? "service" : "request",
                                 type: isRevoked ? "unrevoked" : "revoked",
                                 timestamp: now,
                                 actor: "user",
@@ -104,10 +107,14 @@ export const useConsentStore = create(
                 },
 
                 // Add a new consent
-                createConsent: (serviceId, purposes = [], dataCategories = [], thirdParties = []) => {
+                createConsent: (serviceId, purposes = [], thirdParties = [], source, duration = { value: 1, unit: "years" }) => {
                     const now = new Date().toISOString();
                     const oneYearLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString();
                     const oneMinuteLater = new Date(Date.now() + 1 * 60 * 1000).toISOString(); // test: 1 min expiration
+                    const expiresAt = calculateExpirationDate(duration);
+
+                    console.log(duration);
+                    console.log(expiresAt);
 
                     const newConsent = {
                         id: nanoid(),
@@ -120,20 +127,21 @@ export const useConsentStore = create(
                         timestamps: {
                             createdAt: now,
                             updatedAt: now,
-                            expiresAt: oneYearLater, // change to oneMinuteLater to test expiration functionality
+                            expiresAt: expiresAt, // change to oneMinuteLater to test expiration functionality
                             revokedAt: null,
                         },
-                        metadata: { version: "1.0", consentMethod: "explicit" },
+                        metadata: { version: "1.0", consentMethod: "explicit", source: source },
                     };
 
                     const action = {
                         id: nanoid(),
                         consentId: newConsent.id,
+                        consentType: newConsent.metadata.source === "Service Page" ? "service" : "request",
                         type: "created",
                         timestamp: now,
                         actor: "user",
                         changes: null,
-                        metadata: { source: "Service Page" },
+                        metadata: { source: source },
                     };
 
                     set((state) => ({

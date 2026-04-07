@@ -27,7 +27,6 @@ export function ServicePageView(props) {
           ...p,
           granted: p.required ? true : false, // Keep required boxes granted
         })),
-        dataCategories: provider.dataCategories || [],
         thirdParties: provider.thirdParties || [],
         timestamps: {
           createdAt: new Date().toISOString(),
@@ -44,8 +43,8 @@ export function ServicePageView(props) {
     createConsent(
       consentData.serviceId,
       consentData.purposes,
-      consentData.dataCategories,
-      consentData.thirdParties
+      consentData.thirdParties,
+      "Service Page"
     );
     changeServiceStatus(consentData.serviceId);
     setNewConsentToCreate(null);

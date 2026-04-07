@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { ConsentDashboardView } from "../views/consentDashboardView";
 import { useConsentStore } from "../stores/useConsentStore";
 import { useServiceProviderStore } from "../stores/useServiceProviderStore";
+import { useDataRequestsStore } from "../stores/useDataRequestsStore";
 
 export function ConsentDashboard(){
     const consents = useConsentStore((state) => state.consents);
@@ -13,6 +14,7 @@ export function ConsentDashboard(){
     const providers = useServiceProviderStore((state) => state.providers);
     const changeServiceStatus = useServiceProviderStore((state) => state.toggleStatus);
     const updateConsent = useConsentStore((state) => state.updateConsent);
+    const dataRequests = useDataRequestsStore((state) => state.dataRequests);
 
     // Get provider object by id
     const providerMap = useMemo(() => {
@@ -20,6 +22,13 @@ export function ConsentDashboard(){
         providers.map((p) => [p.id, p])
         );
     }, [providers]);
+
+    // Get request by id
+    const requestMap = useMemo(() => {
+        return Object.fromEntries(
+            dataRequests.map((r) => [r.id, r])
+        );
+    }, [dataRequests]);
 
     return (
        <ConsentDashboardView
@@ -32,6 +41,7 @@ export function ConsentDashboard(){
        providerMap={providerMap}
        changeServiceStatus={changeServiceStatus}
        updateConsent={updateConsent}
+       requestMap={requestMap}
        /> 
     );
 }

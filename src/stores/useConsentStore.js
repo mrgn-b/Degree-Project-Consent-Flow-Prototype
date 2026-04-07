@@ -112,9 +112,9 @@ export const useConsentStore = create(
                     const newConsent = {
                         id: nanoid(),
                         serviceId,
-                        // For now, all parameters are granted
-                        purposes: purposes.map(p => ({ ...p, granted: true })),
-                        thirdParties: thirdParties.map(t => ({ ...t, granted: true })),
+                        // Preserve the granted values from the purposes array
+                        purposes: purposes.map(p => ({ ...p, granted: p.granted })),
+                        thirdParties: thirdParties.map(t => ({ ...t, granted: t.granted })),
                         status: "active",
                         // For now, expiresAt one year from "now"
                         timestamps: {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function ConsentDetailsModal({
   consent,
@@ -6,9 +6,16 @@ export function ConsentDetailsModal({
   getConsentStatus,
   updateConsent,
   onClose,
+  isNewConsent = false,
 }) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(isNewConsent);
   const [editableConsent, setEditableConsent] = useState(consent);
+
+  // Update editableConsent when consent prop changes
+  useEffect(() => {
+    setEditableConsent(consent);
+    setIsEditing(isNewConsent);
+  }, [consent, isNewConsent]);
 
   if (!consent) return null;
 
@@ -32,6 +39,9 @@ export function ConsentDetailsModal({
     setIsEditing(false);
   };
 
+  //Determine if modify button should be shown
+  const showModifyButton = !isNewConsent && getConsentStatus(editableConsent) === "active";
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
@@ -42,19 +52,25 @@ export function ConsentDetailsModal({
 
       {/* Modal */}
       <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">
-        <h2 className="text-lg font-semibold">Consent Details</h2>
+        <h2 className="text-lg font-semibold">
+          {isNewConsent ? "Create Consent" : "Consent Details"}
+        </h2>
         <p className="text-sm text-gray-600 mt-2">
           <strong>Service:</strong> {providerMap[editableConsent.serviceId]?.name || "Unknown Service"}
         </p>
-        <p className="text-sm text-gray-600 mt-1">
-          <strong>Consent ID:</strong> {editableConsent.id}
-        </p>
-        <p className="text-sm text-gray-600 mt-1">
-          <strong>Status:</strong> {getConsentStatus(editableConsent)}
-        </p>
+        {!isNewConsent && (
+          <>
+            <p className="text-sm text-gray-600 mt-1">
+              <strong>Consent ID:</strong> {editableConsent.id}
+            </p>
+            <p className="text-sm text-gray-600 mt-1">
+              <strong>Status:</strong> {getConsentStatus(editableConsent)}
+            </p>
+          </>
+        )}
 
         {/* Toggle for editing */}
-        {getConsentStatus(editableConsent) === "active" && (
+        {showModifyButton && (
           <div className="mt-4">
             <button
               className="px-3 py-1 text-sm rounded-lg border bg-gray-100 hover:bg-gray-200"
@@ -141,7 +157,7 @@ export function ConsentDetailsModal({
               onClick={handleSaveChanges}
               className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700"
             >
-              Save Changes
+              {isNewConsent ? "Create Consent" : "Save Changes"}
             </button>
           )}
         </div>

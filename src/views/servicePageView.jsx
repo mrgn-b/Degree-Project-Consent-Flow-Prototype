@@ -1,19 +1,57 @@
+import { useState } from "react";
+import { ConsentDetailsModal } from "../modals/ConsentDetailsModal";
+
 export function ServicePageView(props) {
   const providers = props.providers;
   const createConsent = props.createConsent;
   const changeServiceStatus = props.changeServiceStatus;
 
+  const [newConsentToCreate, setNewConsentToCreate] = useState(null);
+
   const activeProviders = providers.filter(p => p.status === "active");
   const inactiveProviders = providers.filter(p => p.status === "inactive");
 
-  function handleConsentACB(provider){
-    if(provider.status == "inactive"){
-      createConsent(provider.id, provider.purposes, provider.dataCategories, provider.thirdParties);
-      changeServiceStatus(provider.id);
+  // Create providerMap
+  const providerMap = {};
+  providers.forEach(p => {
+    providerMap[p.id] = { name: p.name, ...p };
+  });
+
+  function handleConsentACB(provider) {
+    if (provider.status === "inactive") {
+      // Create consent object boxex unchecked
+      const newConsent = {
+        id: null, // Will be assigned later
+        serviceId: provider.id,
+        purposes: provider.purposes.map(p => ({
+          ...p,
+          granted: p.required ? true : false, // Keep required boxes granted
+        })),
+        dataCategories: provider.dataCategories || [],
+        thirdParties: provider.thirdParties || [],
+        timestamps: {
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          expiresAt: null,
+          revokedAt: null,
+        },
+      };
+      setNewConsentToCreate(newConsent);
     }
   }
 
-  function renderProviderCardACB(provider, index){
+  function handleCreateConsent(consentData) {
+    createConsent(
+      consentData.serviceId,
+      consentData.purposes,
+      consentData.dataCategories,
+      consentData.thirdParties
+    );
+    changeServiceStatus(consentData.serviceId);
+    setNewConsentToCreate(null);
+  }
+
+  function renderProviderCardACB(provider, index) {
     return (
         <div
         key={index}
@@ -59,6 +97,18 @@ export function ServicePageView(props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl">
         {inactiveProviders.map(renderProviderCardACB)}
       </div>
+
+      {/* Consent Details Modal for new consent */}
+      {newConsentToCreate && (
+        <ConsentDetailsModal
+          consent={newConsentToCreate}
+          providerMap={providerMap}
+          getConsentStatus={() => "pending"}
+          updateConsent={handleCreateConsent}
+          onClose={() => setNewConsentToCreate(null)}
+          isNewConsent={true}
+        />
+      )}
     </div>
   );
 }

@@ -179,13 +179,15 @@ export function ConsentDashboardView(props) {
       )}
 
             {/* Consent Details Modal */}
-      <ConsentDetailsModal
-        consent={editableConsent}
-        providerMap={props.providerMap}
-        getConsentStatus={props.getConsentStatus}
-        updateConsent={props.updateConsent}
-        onClose={() => setEditableConsent(null)}
-      />
+      {editableConsent && (
+        <ConsentDetailsModal
+          consent={editableConsent}
+          providerMap={props.providerMap}
+          getConsentStatus={props.getConsentStatus}
+          updateConsent={props.updateConsent}
+          onClose={() => setEditableConsent(null)}
+        />
+      )}
     </div>
   );
 }

@@ -27,7 +27,8 @@ export function DataRequestsPageView(props){
       consentData.serviceId,
       consentData.purposes,
       consentData.thirdParties,
-      "Data Request Page"
+      "Data Request Page",
+      consentData.duration
     )
     setStatus(consentData.serviceId, "active")
     setIsRequestModalOpen(false);
@@ -188,6 +189,7 @@ export function DataRequestsPageView(props){
             <ConsentRequestModal
             serviceId={selectedRequestToAccept.id}
             serviceName={selectedRequestToAccept.name}
+            duration={selectedRequestToAccept.duration}
             purposes={selectedRequestToAccept.purposes}
             thirdParties={selectedRequestToAccept.thirdParties}
             updateConsent={handleCreateConsent}

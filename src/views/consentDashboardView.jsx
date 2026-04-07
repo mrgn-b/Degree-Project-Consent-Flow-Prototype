@@ -6,6 +6,7 @@ export function ConsentDashboardView(props) {
   const consents = props.consents;
   const changeServiceStatus= props.changeServiceStatus;
   const requestMap = props.requestMap;
+  const setRequestStatus = props.setRequestStatus;
 
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
   const [editableConsent, setEditableConsent] = useState(null);
@@ -20,7 +21,9 @@ export function ConsentDashboardView(props) {
 
   const confirmRevoke = () => {
     props.toggleConsentStatus(selectedConsentToRevoke.id);
-    changeServiceStatus(selectedConsentToRevoke.serviceId);
+    selectedConsentToRevoke.metadata.source === "Service Page" ?
+    changeServiceStatus(selectedConsentToRevoke.serviceId) :
+    setRequestStatus(selectedConsentToRevoke.serviceId, "revoked");
     setSelectedConsentToRevoke(null);
   };
   

@@ -15,6 +15,7 @@ export function ConsentDashboard(){
     const changeServiceStatus = useServiceProviderStore((state) => state.toggleStatus);
     const updateConsent = useConsentStore((state) => state.updateConsent);
     const dataRequests = useDataRequestsStore((state) => state.dataRequests);
+    const setRequestStatus = useDataRequestsStore((state) => state.setStatus)
 
     // Get provider object by id
     const providerMap = useMemo(() => {
@@ -42,6 +43,7 @@ export function ConsentDashboard(){
        changeServiceStatus={changeServiceStatus}
        updateConsent={updateConsent}
        requestMap={requestMap}
+       setRequestStatus={setRequestStatus}
        /> 
     );
 }

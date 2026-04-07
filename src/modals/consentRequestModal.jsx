@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 export function ConsentRequestModal({
   serviceId,
   serviceName,
+  duration,
   purposes,
   thirdParties,
   onClose,
@@ -10,6 +11,7 @@ export function ConsentRequestModal({
 }) {
   const [editableConsent, setEditableConsent] = useState({
     serviceId,
+    duration: duration || null,
     purposes: purposes.map((p) => ({
       id: p.id,
       description: p.description,
@@ -29,6 +31,7 @@ export function ConsentRequestModal({
     // Reset the editable consent if the serviceId or purposes/thirdParties change
     setEditableConsent({
       serviceId,
+      duration: duration || null,
       purposes: purposes.map((p) => ({
         id: p.id,
         description: p.description,

@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { model } from "../model";
 import { nanoid } from "nanoid";
 import { useServiceProviderStore } from "./useServiceProviderStore";
+import { useDataRequestsStore } from "./useDataRequestsStore";
 import { calculateExpirationDate } from "../utilities";
 
 export const useConsentStore = create(
@@ -46,7 +47,9 @@ export const useConsentStore = create(
                 });
 
                 // Update service status
-                useServiceProviderStore.getState().toggleStatus(consent.serviceId);
+                consent.metadata.source === "Service Page" ? 
+                useServiceProviderStore.getState().toggleStatus(consent.serviceId) :
+                useDataRequestsStore.getState().setStatus(consent.serviceId, "completed");
 
                 delete expirationTimers[consent.id];
                 }, msUntilExpiration);

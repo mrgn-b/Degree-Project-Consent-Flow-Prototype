@@ -157,7 +157,8 @@ export function ConsentDashboardView(props) {
               <span className="font-medium">
                 {selectedConsentToRevoke.metadata.source === "Service Page" ? props.providerMap[selectedConsentToRevoke.serviceId].name : requestMap[selectedConsentToRevoke.serviceId].name}
               </span>
-              ?
+              ? 
+              {selectedConsentToRevoke.metadata.source === "Service Page" ? "Access to service will be lost." : "Rewards will be lost."}
             </p>
 
             <div className="flex justify-end gap-3 mt-6">

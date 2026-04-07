@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { ConsentDetailsModal } from "../modals/ConsentDetailsModal";
+import { ConsentRequestModal } from "../modals/consentRequestModal";
 
 export function ServicePageView(props) {
   const providers = props.providers;
   const createConsent = props.createConsent;
   const changeServiceStatus = props.changeServiceStatus;
 
-  const [newConsentToCreate, setNewConsentToCreate] = useState(null);
+  const [serviceToAccept, setServiceToAccept] = useState(null);
 
   const activeProviders = providers.filter(p => p.status === "active");
   const inactiveProviders = providers.filter(p => p.status === "inactive");
@@ -19,23 +19,7 @@ export function ServicePageView(props) {
 
   function handleConsentACB(provider) {
     if (provider.status === "inactive") {
-      // Create consent object boxex unchecked
-      const newConsent = {
-        id: null, // Will be assigned later
-        serviceId: provider.id,
-        purposes: provider.purposes.map(p => ({
-          ...p,
-          granted: p.required ? true : false, // Keep required boxes granted
-        })),
-        thirdParties: provider.thirdParties || [],
-        timestamps: {
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          expiresAt: null,
-          revokedAt: null,
-        },
-      };
-      setNewConsentToCreate(newConsent);
+      setServiceToAccept(provider);
     }
   }
 
@@ -47,7 +31,7 @@ export function ServicePageView(props) {
       "Service Page"
     );
     changeServiceStatus(consentData.serviceId);
-    setNewConsentToCreate(null);
+    setServiceToAccept(null);
   }
 
   function renderProviderCardACB(provider, index) {
@@ -98,14 +82,14 @@ export function ServicePageView(props) {
       </div>
 
       {/* Consent Details Modal for new consent */}
-      {newConsentToCreate && (
-        <ConsentDetailsModal
-          consent={newConsentToCreate}
-          providerMap={providerMap}
-          getConsentStatus={() => "pending"}
+      {serviceToAccept && (
+        <ConsentRequestModal
+          serviceId={serviceToAccept.id}
+          serviceName={serviceToAccept.name}
+          purposes={serviceToAccept.purposes}
+          thirdParties={serviceToAccept.thirdParties}
           updateConsent={handleCreateConsent}
-          onClose={() => setNewConsentToCreate(null)}
-          isNewConsent={true}
+          onClose={() => setServiceToAccept(null)}
         />
       )}
     </div>

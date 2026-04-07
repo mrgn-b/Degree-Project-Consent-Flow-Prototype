@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ConsentRequestModal } from "../modals/consentRequestModal";
 
 export function DataRequestsPageView(props){
   const dataRequests = props.dataRequests;
@@ -6,10 +7,11 @@ export function DataRequestsPageView(props){
   const createConsent = props.createConsent;
 
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [selectedRequestToAccept, setSelectedRequestToAccept] = useState(null);
 
   const statusStyles = {
     available: "bg-gray-100 text-gray-600",
-    accepted: "bg-blue-100 text-blue-700",
     active: "bg-green-100 text-green-700",
     completed: "bg-purple-100 text-purple-700",
     revoked: "bg-red-100 text-red-700",
@@ -19,6 +21,17 @@ export function DataRequestsPageView(props){
     setStatus(req.id, "active");
     createConsent(req.id, req.purposes, req.thirdParties, "Data Request Page", req.duration)
   };
+
+  function handleCreateConsent(consentData) {
+    createConsent(
+      consentData.serviceId,
+      consentData.purposes,
+      consentData.thirdParties,
+      "Data Request Page"
+    )
+    setStatus(consentData.serviceId, "active")
+    setIsRequestModalOpen(false);
+  }
 
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
@@ -74,7 +87,10 @@ export function DataRequestsPageView(props){
 
               {req.status === "available" && (
                 <button
-                  onClick={() => handleAccept(req)}
+                  onClick={() => {
+                    setIsRequestModalOpen(true);
+                    setSelectedRequestToAccept(req);
+                }}
                   className="px-3 py-1 text-sm rounded-lg bg-green-600 text-white"
                 >
                   Accept
@@ -153,7 +169,8 @@ export function DataRequestsPageView(props){
               {selectedRequest.status === "available" && (
                 <button
                   onClick={() => {
-                    handleAccept(selectedRequest);
+                    setSelectedRequestToAccept(selectedRequest);
+                    setIsRequestModalOpen(true);
                     setSelectedRequest(null);
                   }}
                   className="px-4 py-2 text-sm rounded-lg bg-green-600 text-white"
@@ -165,6 +182,21 @@ export function DataRequestsPageView(props){
           </div>
         </div>
       )}
+
+      {/* Consent Request Modal */}
+        {isRequestModalOpen && selectedRequestToAccept && (
+            <ConsentRequestModal
+            serviceId={selectedRequestToAccept.id}
+            serviceName={selectedRequestToAccept.name}
+            purposes={selectedRequestToAccept.purposes}
+            thirdParties={selectedRequestToAccept.thirdParties}
+            updateConsent={handleCreateConsent}
+            onClose={() => {
+                setIsRequestModalOpen(false);
+                setSelectedRequest(null);
+            }}
+            />
+        )}
     </div>
   );
 }

@@ -70,6 +70,15 @@ export function ConsentRequestModal({
     }));
   };
 
+  const handleRejectCategory = (category) => {
+    setEditableConsent((prev) => ({
+      ...prev,
+      purposes: prev.purposes.map((p) =>
+        p.category === category ? { ...p, granted: false } : p
+      ),
+    }));
+  };
+
   const handleSaveChanges = () => {
     updateConsent(editableConsent);
     onClose();
@@ -79,73 +88,87 @@ export function ConsentRequestModal({
     onClose();
   };
 
-const CategorySection = ({ categoryKey, categoryLabel, purposes }) => {
-  if (purposes.length === 0) return null;
+  const CategorySection = ({ categoryKey, categoryLabel, purposes }) => {
+    if (purposes.length === 0) return null;
 
-  const allGranted = purposes.every(p => p.granted);
+    const allGranted = purposes.every(p => p.granted);
+    const allRejected = purposes.every(p => !p.granted);
 
-  return (
-    <div className="border-b last:border-b-0">
-      {/* Category Header with divider */}
-      <div className="flex items-center gap-4 py-4">
-        <div className="font-semibold text-gray-800 min-w-[100px]">{categoryLabel}</div>
-        <div className="flex-1 border-t border-gray-400" />
-      </div>
+    return (
+      <div className="border-b last:border-b-0">
+        {/* Category Header with divider */}
+        <div className="flex items-center gap-4 py-4">
+          <div className="font-semibold text-gray-800 min-w-[100px]">{categoryLabel}</div>
+          <div className="flex-1 border-t border-gray-400" />
+        </div>
 
-      {/* Purpose Items */}
-      <div className="space-y-4 pb-4">
-        {purposes.map((p) => (
-          <div key={p.id}>
-            <div className="flex justify-between items-start gap-3">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-700">{p.description}</p>
-                {/* Linked Data Categories */}
-                {p.dataCategories?.length > 0 && (
-                  <ul className="mt-2 space-y-1">
-                    {p.dataCategories.map((dc, idx) => (
-                      <li key={idx} className="text-xs text-gray-500 flex items-center gap-2">
-                        <span className="w-1 h-1 rounded-full bg-gray-400" />
-                        {dc}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+        {/* Purpose Items */}
+        <div className="space-y-4 pb-4">
+          {purposes.map((p) => (
+            <div key={p.id}>
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-700">{p.description}</p>
+                  {/* Linked Data Categories */}
+                  {p.dataCategories?.length > 0 && (
+                    <ul className="mt-2 space-y-1">
+                      {p.dataCategories.map((dc, idx) => (
+                        <li key={idx} className="text-xs text-gray-500 flex items-center gap-2">
+                          <span className="w-1 h-1 rounded-full bg-gray-400" />
+                          {dc}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
 
-              {/* Checkbox */}
-              <div className="relative group mt-0.5">
-                <input
-                  type="checkbox"
-                  checked={p.granted}
-                  onChange={() => handlePurposeChange(p.id)}
-                  className="w-5 h-5 cursor-pointer accent-blue-600"
-                />
-                {p.required && (
-                  <div className="absolute hidden group-hover:block bottom-full right-0 mb-2 bg-gray-800 text-white text-xs rounded px-3 py-1 whitespace-nowrap z-[9999]">
-                    Required
-                  </div>
-                )}
+                {/* Checkbox */}
+                <div className="relative group mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={p.granted}
+                    onChange={() => handlePurposeChange(p.id)}
+                    className="w-5 h-5 cursor-pointer accent-blue-600"
+                  />
+                  {p.required && (
+                    <div className="absolute hidden group-hover:block bottom-full right-0 mb-2 bg-gray-800 text-white text-xs rounded px-3 py-1 whitespace-nowrap z-[9999]">
+                      Required
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Accept All Button */}
-      {!allGranted && (
-        <div className="pb-4">
+        {/* Accept All / Reject All Buttons */}
+        <div className="pb-4 flex gap-3">
           <button
             onClick={() => handleAcceptCategory(categoryKey)}
-            className="px-4 py-2 text-sm font-medium border-2 border-gray-800 text-gray-800 rounded-lg hover:bg-gray-50 transition"
+            disabled={allGranted}
+            className={`px-4 py-2 text-sm font-medium border-2 border-gray-800 rounded-lg transition ${
+              allGranted
+                ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
+                : "text-gray-800 hover:bg-gray-50 cursor-pointer"
+            }`}
           >
             Accept all {categoryLabel}
           </button>
+          <button
+            onClick={() => handleRejectCategory(categoryKey)}
+            disabled={allRejected}
+            className={`px-4 py-2 text-sm font-medium border-2 border-gray-800 rounded-lg transition ${
+              allRejected
+                ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
+                : "text-gray-800 hover:bg-gray-50 cursor-pointer"
+            }`}
+          >
+            Reject all {categoryLabel}
+          </button>
         </div>
-      )}
-    </div>
-  );
-};
-
+      </div>
+    );
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

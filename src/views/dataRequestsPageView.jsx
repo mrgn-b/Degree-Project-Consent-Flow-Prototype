@@ -27,7 +27,7 @@ export function DataRequestsPageView(props){
       consentData.serviceId,
       consentData.purposes,
       consentData.thirdParties,
-      "Data Request Page",
+      "Data Offers Page",
       consentData.duration
     )
     setStatus(consentData.serviceId, "active")
@@ -38,7 +38,7 @@ export function DataRequestsPageView(props){
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold">Data Requests</h1>
+        <h1 className="text-2xl font-semibold">Data Offers</h1>
         <p className="text-gray-500 text-sm">
           Share your data in exchange for rewards
         </p>

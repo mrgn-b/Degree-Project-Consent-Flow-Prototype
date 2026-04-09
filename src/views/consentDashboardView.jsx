@@ -8,9 +8,11 @@ export function ConsentDashboardView(props) {
   const requestMap = props.requestMap;
   const setRequestStatus = props.setRequestStatus;
 
+  // Reverse consents so that it goes from newest to oldest
+  const reversedConsents = consents.reverse();
+
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
   const [editableConsent, setEditableConsent] = useState(null);
-  const [isEditing, setIsEditing] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
 
   const statusStyles = {
@@ -46,8 +48,8 @@ export function ConsentDashboardView(props) {
   }
 
   const filteredConsents = 
-    statusFilter === "all" ? consents : 
-      consents.filter((c) => props.getConsentStatus(c) == statusFilter);
+    statusFilter === "all" ? reversedConsents : 
+      reversedConsents.filter((c) => props.getConsentStatus(c) == statusFilter);
 
   return (
     <div className="p-6 space-y-6">

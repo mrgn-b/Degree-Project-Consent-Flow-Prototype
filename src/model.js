@@ -11,19 +11,22 @@ export const model = {
           id: "analytics",
           description: "Usage analytics",
           dataCategories: ["usage_data", "device_info"],
-          required: true
+          required: true,
+          category: "required"
         },
         {
           id: "personalization",
           description: "Personalized recommendations",
           dataCategories: ["usage_data", "location"],
-          required: false
+          required: false,
+          category: "functional"
         },
         {
           id: "marketing",
           description: "Marketing insights",
           dataCategories: ["usage_data", "location", "device_info"],
-          required: true
+          required: true,
+          category: "required"
         }
       ],
       thirdParties: [
@@ -42,19 +45,22 @@ export const model = {
           id: "messaging",
           description: "Send notifications",
           dataCategories: ["contact_info", "preferences"],
-          required: true 
+          required: true,
+          category: "required"
         },
         { 
           id: "alerts", 
           description: "Critical alerts", 
           dataCategories: ["contact_info", "location"],
-          required: true 
+          required: true,
+          category: "required"
         },
         { 
           id: "marketing", 
           description: "Promotional messaging", 
           dataCategories: ["contact_info", "preferences"],
-          required: false 
+          required: false,
+          category: "advertising"
         }
       ],
       thirdParties: [
@@ -73,18 +79,21 @@ export const model = {
           id: "booking", 
           description: "Appointment booking", 
           dataCategories: ["contact_info", "location"],
-          required: true
+          required: true,
+          category: "required"
          },
         { 
           id: "personalization", 
           description: "Personalized recommendations", 
           dataCategories: ["contact_info"], 
-          required: false
+          required: false,
+          category: "functional"
         },
         { id: "loyalty", 
           description: "Loyalty program", 
           dataCategories: ["contact_info", "payment_info"],
-          required: false
+          required: false,
+          category: "advertising"
         }
       ],
       thirdParties: [
@@ -103,19 +112,22 @@ export const model = {
           id: "authentication",
           description: "User authentication",
           dataCategories: ["identity_info", "security_info"],
-          required: true
+          required: true,
+          category: "required"
           },
         { 
           id: "profile_management", 
           description: "Profile management", 
           dataCategories: ["identity_info", "contact_info"],
-          required: false
+          required: false,
+          category: "functional"
         },
         { 
           id: "security_alerts", 
           description: "Security alerts", 
           dataCategories: ["security_info", "contact_info"],
-          required: true
+          required: true,
+          category: "required"
         }
       ],
       thirdParties: [
@@ -134,13 +146,15 @@ export const model = {
           id: "booking",
           description: "Appointment scheduling", 
           dataCategories: ["contact_info", "address_info"],
-          required: true
+          required: true,
+          category: "required"
         },
         { 
           id: "emergency_services", 
           description: "Emergency services", 
           dataCategories: ["contact_info", "service_history"], 
-          required: false
+          required: false,
+          category: "functional"
         }
       ],
       thirdParties: [
@@ -159,18 +173,21 @@ export const model = {
           id: "ordering", 
           description: "Order processing", 
           dataCategories: ["contact_info", "payment_info", "order_history"], 
-          required: true
+          required: true,
+          category: "required"
         },
         { id: "delivery_tracking", 
           description: "Track deliveries", 
           dataCategories: ["contact_info", "location", "order_history"],
-          required: true
+          required: true,
+          category: "required"
         },
         { 
           id: "marketing", 
           description: "Promotions & offers", 
           dataCategories: ["contact_info", "preferences"],
-          required: false
+          required: false,
+          category: "advertising"
         }
       ],
       thirdParties: [
@@ -199,7 +216,8 @@ export const model = {
           id: "activity_tracking",
           description: "Analyze physical activity",
           dataCategories: ["health_data", "device_info"],
-          required: true
+          required: true,
+          category: "required"
         },
       ],
       thirdParties: [
@@ -224,7 +242,8 @@ export const model = {
           id: "purchase_analysis",
           description: "Analyze purchase history",
           dataCategories: ["transaction_data", "product_usage"],
-          required: true
+          required: true,
+          category: "required"
         },
       ],
       thirdParties: [
@@ -249,7 +268,8 @@ export const model = {
           id: "location_tracking",
           description: "Track location for nearby deals",
           dataCategories: ["location"],
-          required: true
+          required: true,
+          category: "required"
         }
       ],
       thirdParties: [
@@ -273,7 +293,8 @@ export const model = {
           id: "content_analysis",
           description: "Analyze viewing behavior",
           dataCategories: ["usage_data", "preferences"],
-          required: true
+          required: true,
+          category: "required"
         },
       ],
       thirdParties: [
@@ -297,7 +318,8 @@ export const model = {
           id: "survey_analysis",
           description: "Analyze survey responses",
           dataCategories: ["preferences", "demographics"],
-          required: true
+          required: true,
+          category: "required"
         }
       ],
       thirdParties: [
@@ -321,7 +343,8 @@ export const model = {
           id: "mobility_tracking",
           description: "Analyze commuting patterns",
           dataCategories: ["location", "usage_data"],
-          required: true
+          required: true,
+          category: "required"
         }
       ],
       thirdParties: [

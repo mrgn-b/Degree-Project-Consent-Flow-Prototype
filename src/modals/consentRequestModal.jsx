@@ -17,10 +17,18 @@ export function ConsentRequestModal({
       description: p.description,
       granted: false, // Start unchecked
       required: p.required,
+      category: p.category,
       dataCategories: p.dataCategories || [],
     })),
     thirdParties: thirdParties || [],
   });
+
+  // Group purposes by category
+  const purposesByCategory = {
+    required: editableConsent.purposes.filter(p => p.category === "required"),
+    functional: editableConsent.purposes.filter(p => p.category === "functional"),
+    advertising: editableConsent.purposes.filter(p => p.category === "advertising"),
+  };
 
   // Compute if all required purposes are granted
   const allRequiredGranted = editableConsent.purposes
@@ -37,6 +45,7 @@ export function ConsentRequestModal({
         description: p.description,
         granted: false, // Start unchecked
         required: p.required,
+        category: p.category,
         dataCategories: p.dataCategories || [],
       })),
       thirdParties: thirdParties || [],
@@ -52,6 +61,15 @@ export function ConsentRequestModal({
     }));
   };
 
+  const handleAcceptCategory = (category) => {
+    setEditableConsent((prev) => ({
+      ...prev,
+      purposes: prev.purposes.map((p) =>
+        p.category === category ? { ...p, granted: true } : p
+      ),
+    }));
+  };
+
   const handleSaveChanges = () => {
     updateConsent(editableConsent);
     onClose();
@@ -61,81 +79,144 @@ export function ConsentRequestModal({
     onClose();
   };
 
+const CategorySection = ({ categoryKey, categoryLabel, purposes }) => {
+  if (purposes.length === 0) return null;
+
+  const allGranted = purposes.every(p => p.granted);
+
+  return (
+    <div className="border-b last:border-b-0">
+      {/* Category Header with divider */}
+      <div className="flex items-center gap-4 py-4">
+        <div className="font-semibold text-gray-800 min-w-[100px]">{categoryLabel}</div>
+        <div className="flex-1 border-t border-gray-400" />
+      </div>
+
+      {/* Purpose Items */}
+      <div className="space-y-4 pb-4">
+        {purposes.map((p) => (
+          <div key={p.id}>
+            <div className="flex justify-between items-start gap-3">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-700">{p.description}</p>
+                {/* Linked Data Categories */}
+                {p.dataCategories?.length > 0 && (
+                  <ul className="mt-2 space-y-1">
+                    {p.dataCategories.map((dc, idx) => (
+                      <li key={idx} className="text-xs text-gray-500 flex items-center gap-2">
+                        <span className="w-1 h-1 rounded-full bg-gray-400" />
+                        {dc}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {/* Checkbox */}
+              <div className="relative group mt-0.5">
+                <input
+                  type="checkbox"
+                  checked={p.granted}
+                  onChange={() => handlePurposeChange(p.id)}
+                  className="w-5 h-5 cursor-pointer accent-blue-600"
+                />
+                {p.required && (
+                  <div className="absolute hidden group-hover:block bottom-full right-0 mb-2 bg-gray-800 text-white text-xs rounded px-3 py-1 whitespace-nowrap z-[9999]">
+                    Required
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Accept All Button */}
+      {!allGranted && (
+        <div className="pb-4">
+          <button
+            onClick={() => handleAcceptCategory(categoryKey)}
+            className="px-4 py-2 text-sm font-medium border-2 border-gray-800 text-gray-800 rounded-lg hover:bg-gray-50 transition"
+          >
+            Accept all {categoryLabel}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">
-        <h2 className="text-lg font-semibold">Create Consent</h2>
-        <p className="text-sm text-gray-600 mt-2">
-          <strong>Service:</strong> {serviceName || "Unknown Service"}
-        </p>
+      <div className="relative bg-white rounded-xl shadow-lg w-full max-w-2xl p-8 overflow-y-auto max-h-[90vh]">
+        {/* Header */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-gray-900">Create Consent</h2>
+          <p className="text-sm text-gray-600 mt-2">
+            <strong>Service:</strong> {serviceName || "Unknown Service"}
+          </p>
+        </div>
 
-        {/* Purposes */}
-        <section className="mt-4 space-y-4">
-          <p className="text-sm text-gray-600 font-semibold">Purposes</p>
-          <ul className="list-none space-y-2">
-            {editableConsent.purposes.map((p) => (
-              <li key={p.id}>
-                <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-gray-600 inline-block" />
-                    {p.description} {p.required && <strong>(Required)</strong>}
-                  </span>
-                  <input
-                    type="checkbox"
-                    checked={p.granted}
-                    onChange={() => handlePurposeChange(p.id)}
-                    className="cursor-pointer"
-                  />
-                </div>
-
-                {p.dataCategories.length > 0 && (
-                  <ul className="ml-6 mt-1 list-disc list-inside text-gray-500 text-xs">
-                    {p.dataCategories.map((dc, idx) => (
-                      <li key={idx}>{dc}</li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
+        {/* Category Sections */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+          <p className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Purposes & Data Access</p>
+          
+          <div className="space-y-0">
+            <CategorySection
+              categoryKey="required"
+              categoryLabel="Required"
+              purposes={purposesByCategory.required}
+            />
+            <CategorySection
+              categoryKey="functional"
+              categoryLabel="Functional"
+              purposes={purposesByCategory.functional}
+            />
+            <CategorySection
+              categoryKey="advertising"
+              categoryLabel="Advertising"
+              purposes={purposesByCategory.advertising}
+            />
+          </div>
+        </div>
 
         {/* Third Parties */}
-        <section className="mt-4">
-          <p className="text-sm text-gray-600 font-semibold">Third Parties</p>
-          <ul className="list-none mt-2 space-y-2">
-            {editableConsent.thirdParties.length > 0 ? (
-              editableConsent.thirdParties.map((t) => (
-                <li key={t.id} className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-gray-600 inline-block" />
-                  {t.name}
-                </li>
-              ))
-            ) : (
-              <li>-</li>
-            )}
-          </ul>
-        </section>
+        {editableConsent.thirdParties.length > 0 && (
+          <div className="mb-6">
+            <p className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Third Parties</p>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <ul className="space-y-2">
+                {editableConsent.thirdParties.map((t) => (
+                  <li key={t.id} className="text-sm text-gray-700 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                    {t.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         {/* Modal Actions */}
-        <div className="flex justify-end gap-3 mt-6">
+        <div className="flex justify-end gap-3">
           <button
             onClick={handleClose}
-            className="px-4 py-2 text-sm rounded-lg border hover:bg-gray-50"
+            className="px-6 py-2 text-sm font-medium rounded-lg border-2 border-gray-800 text-gray-800 hover:bg-gray-50 transition"
           >
             Close
           </button>
           <button
             onClick={handleSaveChanges}
-            disabled={!allRequiredGranted} // enable only when all required checked
-            className={`px-4 py-2 text-sm rounded-lg border hover:bg-gray-50${
-              !allRequiredGranted
-                ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                : "cursor-pointer hover:bg-gray-50"
+            disabled={!allRequiredGranted}
+            className={`px-6 py-2 text-sm font-medium rounded-lg transition ${
+              allRequiredGranted
+                ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                : "bg-gray-400 text-gray-600 cursor-not-allowed"
             }`}
           >
             Create Consent

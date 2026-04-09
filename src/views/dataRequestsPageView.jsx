@@ -9,17 +9,17 @@ export function DataRequestsPageView(props){
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [selectedRequestToAccept, setSelectedRequestToAccept] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const filteredOffers = 
+    statusFilter === "all" ? dataRequests : 
+      dataRequests.filter((r) => r.status == statusFilter);
 
   const statusStyles = {
     available: "bg-gray-100 text-gray-600",
     active: "bg-green-100 text-green-700",
     completed: "bg-purple-100 text-purple-700",
     revoked: "bg-red-100 text-red-700",
-  };
-
-  const handleAccept = (req) => {
-    setStatus(req.id, "active");
-    createConsent(req.id, req.purposes, req.thirdParties, "Data Request Page", req.duration)
   };
 
   function handleCreateConsent(consentData) {
@@ -44,9 +44,28 @@ export function DataRequestsPageView(props){
         </p>
       </div>
 
+    {/* Filter Dropdown */}
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-gray-500">Filter by:</span>
+
+      <select
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+        className="text-sm bg-white border border-gray-200 rounded-lg px-3 py-1.5 shadow-sm
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300
+          transition cursor-pointer"
+      >
+        <option value="all">All</option>
+        <option value="available">Available</option>
+        <option value="active">Active</option>
+        <option value="completed">Completed</option>
+        <option value="revoked">Revoked</option>
+      </select>
+    </div>
+
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {dataRequests.map((req) => (
+        {filteredOffers.map((req) => (
           <div
             key={req.id}
             className="bg-white rounded-xl shadow p-5 flex flex-col justify-between"
@@ -79,12 +98,15 @@ export function DataRequestsPageView(props){
 
             {/* Actions */}
             <div className="mt-4 flex justify-between items-center">
-              <button
-                onClick={() => setSelectedRequest(req)}
-                className="text-sm text-blue-600"
-              >
-                View Details
-              </button>
+              
+              {req.status !== "available" &&
+                <button
+                    onClick={() => setSelectedRequest(req)}
+                    className="text-sm text-blue-600"
+                >
+                    View Details
+                </button>
+              }
 
               {req.status === "available" && (
                 <button
@@ -92,9 +114,9 @@ export function DataRequestsPageView(props){
                     setIsRequestModalOpen(true);
                     setSelectedRequestToAccept(req);
                 }}
-                  className="px-3 py-1 text-sm rounded-lg bg-green-600 text-white"
+                  className="px-3 py-1 text-sm rounded-lg bg-blue-600 text-white"
                 >
-                  Accept
+                View
                 </button>
               )}
 

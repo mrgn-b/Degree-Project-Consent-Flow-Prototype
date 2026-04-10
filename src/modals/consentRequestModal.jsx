@@ -273,7 +273,7 @@ export function ConsentRequestModal({
                 : "bg-gray-400 text-gray-600 cursor-not-allowed"
             }`}
           >
-            Create Consent
+            Agree
           </button>
         </div>
       </div>

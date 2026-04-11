@@ -6,6 +6,9 @@ export function calculateExpirationDate(duration) {
     let expiresAt = now;
 
     switch (unit) {
+        case "instant":
+            expiresAt += 1000; // Add 1 second delay
+            break;
         case "minutes":
             expiresAt += value * 60 * 1000; // Add value in minutes (converted to ms)
             break;

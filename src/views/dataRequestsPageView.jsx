@@ -92,7 +92,7 @@ export function DataRequestsPageView(props){
 
               {/* Duration */}
               <div className="text-sm text-gray-500">
-                <span className="font-medium">Duration: {req.duration.value} {req.duration.unit}</span>
+                <span className="font-medium">Duration: {req.duration.unit !== "instant" ? req.duration.value + " " + req.duration.unit : "Instant reward"}</span>
               </div>
             </div>
 

@@ -27,6 +27,20 @@ export const model = {
           dataCategories: ["usage_data", "location", "device_info"],
           required: true,
           category: "required"
+        },
+        {
+          id: "benchmarking",
+          description: "Compare usage trends across anonymized user groups",
+          dataCategories: ["usage_data"],
+          required: false,
+          category: "functional"
+        },
+        {
+          id: "data_sharing_partners",
+          description: "Share aggregated insights with business partners",
+          dataCategories: ["usage_data"],
+          required: false,
+          category: "advertising"
         }
       ],
       thirdParties: [
@@ -48,17 +62,31 @@ export const model = {
           required: true,
           category: "required"
         },
-        { 
-          id: "alerts", 
-          description: "Critical alerts", 
+        {
+          id: "alerts",
+          description: "Critical alerts",
           dataCategories: ["contact_info", "location"],
           required: true,
           category: "required"
         },
-        { 
-          id: "marketing", 
-          description: "Promotional messaging", 
+        {
+          id: "marketing",
+          description: "Promotional messaging",
           dataCategories: ["contact_info", "preferences"],
+          required: false,
+          category: "advertising"
+        },
+        {
+          id: "delivery_optimization",
+          description: "Optimize notification delivery timing",
+          dataCategories: ["usage_data", "device_info"],
+          required: false,
+          category: "functional"
+        },
+        {
+          id: "engagement_tracking",
+          description: "Track interaction with notifications",
+          dataCategories: ["usage_data"],
           required: false,
           category: "advertising"
         }
@@ -75,25 +103,40 @@ export const model = {
       logoUrl: "/assets/logos/hair.svg",
       status: "inactive",
       purposes: [
-        { 
-          id: "booking", 
-          description: "Appointment booking", 
+        {
+          id: "booking",
+          description: "Appointment booking",
           dataCategories: ["contact_info", "location"],
           required: true,
           category: "required"
-         },
-        { 
-          id: "personalization", 
-          description: "Personalized recommendations", 
-          dataCategories: ["contact_info"], 
+        },
+        {
+          id: "personalization",
+          description: "Personalized recommendations",
+          dataCategories: ["contact_info"],
           required: false,
           category: "functional"
         },
-        { id: "loyalty", 
-          description: "Loyalty program", 
+        {
+          id: "loyalty",
+          description: "Loyalty program",
           dataCategories: ["contact_info", "payment_info"],
           required: false,
           category: "advertising"
+        },
+        {
+          id: "reminders",
+          description: "Send appointment reminders",
+          dataCategories: ["contact_info"],
+          required: true,
+          category: "required"
+        },
+        {
+          id: "feedback_collection",
+          description: "Collect feedback after your visit",
+          dataCategories: ["contact_info", "service_history"],
+          required: false,
+          category: "functional"
         }
       ],
       thirdParties: [
@@ -108,26 +151,40 @@ export const model = {
       logoUrl: "/assets/logos/secureprofile.svg",
       status: "inactive",
       purposes: [
-        { 
+        {
           id: "authentication",
           description: "User authentication",
           dataCategories: ["identity_info", "security_info"],
           required: true,
           category: "required"
-          },
-        { 
-          id: "profile_management", 
-          description: "Profile management", 
+        },
+        {
+          id: "profile_management",
+          description: "Profile management",
           dataCategories: ["identity_info", "contact_info"],
           required: false,
           category: "functional"
         },
-        { 
-          id: "security_alerts", 
-          description: "Security alerts", 
+        {
+          id: "security_alerts",
+          description: "Security alerts",
           dataCategories: ["security_info", "contact_info"],
           required: true,
           category: "required"
+        },
+        {
+          id: "multi_factor_auth",
+          description: "Enable multi-factor authentication",
+          dataCategories: ["security_info", "contact_info"],
+          required: true,
+          category: "required"
+        },
+        {
+          id: "activity_logs",
+          description: "Maintain logs of account activity",
+          dataCategories: ["usage_data", "security_info"],
+          required: false,
+          category: "functional"
         }
       ],
       thirdParties: [
@@ -142,17 +199,31 @@ export const model = {
       logoUrl: "/assets/logos/plumber.svg",
       status: "inactive",
       purposes: [
-        { 
+        {
           id: "booking",
-          description: "Appointment scheduling", 
+          description: "Appointment scheduling",
           dataCategories: ["contact_info", "address_info"],
           required: true,
           category: "required"
         },
-        { 
-          id: "emergency_services", 
-          description: "Emergency services", 
-          dataCategories: ["contact_info", "service_history"], 
+        {
+          id: "emergency_services",
+          description: "Emergency services",
+          dataCategories: ["contact_info", "service_history"],
+          required: false,
+          category: "functional"
+        },
+        {
+          id: "technician_assignment",
+          description: "Assign the nearest available technician",
+          dataCategories: ["address_info", "location"],
+          required: true,
+          category: "required"
+        },
+        {
+          id: "service_followup",
+          description: "Follow up after completed service",
+          dataCategories: ["contact_info", "service_history"],
           required: false,
           category: "functional"
         }
@@ -169,23 +240,38 @@ export const model = {
       logoUrl: "/assets/logos/cafe.svg",
       status: "inactive",
       purposes: [
-        { 
-          id: "ordering", 
-          description: "Order processing", 
-          dataCategories: ["contact_info", "payment_info", "order_history"], 
+        {
+          id: "ordering",
+          description: "Order processing",
+          dataCategories: ["contact_info", "payment_info", "order_history"],
           required: true,
           category: "required"
         },
-        { id: "delivery_tracking", 
-          description: "Track deliveries", 
+        {
+          id: "delivery_tracking",
+          description: "Track deliveries",
           dataCategories: ["contact_info", "location", "order_history"],
           required: true,
           category: "required"
         },
-        { 
-          id: "marketing", 
-          description: "Promotions & offers", 
+        {
+          id: "marketing",
+          description: "Promotions & offers",
           dataCategories: ["contact_info", "preferences"],
+          required: false,
+          category: "advertising"
+        },
+        {
+          id: "order_recommendations",
+          description: "Suggest items based on past orders",
+          dataCategories: ["order_history"],
+          required: false,
+          category: "functional"
+        },
+        {
+          id: "loyalty_tracking",
+          description: "Track points and rewards in loyalty program",
+          dataCategories: ["order_history", "contact_info"],
           required: false,
           category: "advertising"
         }
@@ -351,7 +437,59 @@ export const model = {
         { id: "uber", name: "Uber" },
         { id: "google_maps", name: "Google Maps API" }
       ]
-    }
+    },
+
+    {
+      id: "gaming_rewards",
+      name: "Play & Earn",
+      description: "Share your gaming activity to earn instant in-game rewards",
+      logoUrl: "/assets/logos/gaming.svg",
+      status: "available",
+      reward: "500 in-game credits",
+      duration: {
+        value: 0,
+        unit: "instant"
+      },
+      purposes: [
+        {
+          id: "gaming_activity_tracking",
+          description: "Track and analyze your gaming activity",
+          dataCategories: ["gameplay_data", "device_info"],
+          required: true,
+          category: "required"
+        }
+      ],
+      thirdParties: [
+        { id: "steam", name: "Steam" },
+        { id: "epic_games", name: "Epic Games" }
+      ]
+    },
+
+    {
+      id: "ipet_rewards",
+      name: "PetTracker",
+      description: "Share your pet's activity and health data for instant rewards",
+      logoUrl: "/assets/logos/pet.svg",
+      status: "available",
+      reward: "10% off pet supplies",
+      duration: {
+        value: 0,
+        unit: "instant"
+      },
+      purposes: [
+        {
+          id: "pet_activity_tracking",
+          description: "Track pet's activity and health metrics",
+          dataCategories: ["health_data", "activity_data"],
+          required: true,
+          category: "required"
+        }
+      ],
+      thirdParties: [
+        { id: "fitbark", name: "FitBark" },
+        { id: "whistle", name: "Whistle" }
+      ]
+    },
   ]
 
   /* How consent objects should look like

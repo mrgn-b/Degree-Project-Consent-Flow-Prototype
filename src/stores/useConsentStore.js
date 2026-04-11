@@ -184,6 +184,7 @@ export const useConsentStore = create(
 
                     const action = {
                         id: nanoid(),
+                        consentType: updatedConsent.metadata.source === "Service Page" ? "service" : "request",
                         consentId: updatedConsent.id,
                         type: "updated",
                         timestamp: now,

@@ -9,7 +9,7 @@ export function ConsentDashboardView(props) {
   const setRequestStatus = props.setRequestStatus;
 
   // Reverse consents so that it goes from newest to oldest
-  const reversedConsents = consents.reverse();
+  const reversedConsents = [...consents].reverse();
 
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
   const [editableConsent, setEditableConsent] = useState(null);

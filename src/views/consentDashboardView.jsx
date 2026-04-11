@@ -146,7 +146,7 @@ export function ConsentDashboardView(props) {
 
       {/* Revoke Modal */}
       {selectedConsentToRevoke && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
           {/* Overlay */}
           <div
             className="absolute inset-0 bg-black/40"
@@ -185,7 +185,7 @@ export function ConsentDashboardView(props) {
         </div>
       )}
 
-            {/* Consent Details Modal */}
+      {/* Consent Details Modal */}
       {editableConsent && (
         <ConsentDetailsModal
           consent={editableConsent}
@@ -193,6 +193,7 @@ export function ConsentDashboardView(props) {
           requestMap={requestMap}
           getConsentStatus={props.getConsentStatus}
           updateConsent={props.updateConsent}
+          onRevoke={() => setSelectedConsentToRevoke(editableConsent)}
           onClose={() => setEditableConsent(null)}
         />
       )}

@@ -8,6 +8,7 @@ export function ConsentDetailsModal({
   updateConsent,
   onClose,
   isNewConsent = false,
+  onRevoke,
 }) {
   const [editableConsent, setEditableConsent] = useState(consent);
   const [originalConsent, setOriginalConsent] = useState(consent);
@@ -146,7 +147,10 @@ export function ConsentDetailsModal({
                           type="checkbox"
                           checked={p.granted}
                           onChange={() => handlePurposeChange(p.id)}
-                          className="w-5 h-5 cursor-pointer accent-blue-600"
+                          disabled={categoryKey === "required"}
+                          className={`w-5 h-5 accent-blue-600 ${
+                            categoryKey === "required" ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                          }`}
                         />
                         {p.required && (
                           <div className="absolute hidden group-hover:block bottom-full right-0 mb-2 bg-gray-800 text-white text-xs rounded px-3 py-1 whitespace-nowrap z-[9999]">
@@ -168,7 +172,7 @@ export function ConsentDetailsModal({
             </div>
 
             {/* Accept All / Reject All Buttons - Only show if editable */}
-            {isEditable && (
+            {isEditable && categoryKey !== "required" && (
               <div className="pb-4 flex gap-3">
                 <button
                   onClick={() => handleAcceptCategory(categoryKey)}
@@ -191,6 +195,21 @@ export function ConsentDetailsModal({
                   }`}
                 >
                   Reject all {categoryLabel}
+                </button>
+              </div>
+            )}
+
+            {/* Required category message and revoke button */}
+            {isEditable && categoryKey === "required" && (
+              <div className="pb-4 flex items-center justify-between">
+                <p className="text-sm text-gray-600">
+                  Required fields cannot be disabled. The consent must include these to remain active.
+                </p>
+                <button
+                  onClick={onRevoke}
+                  className="px-4 py-2 text-sm font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 transition whitespace-nowrap ml-4"
+                >
+                  Revoke Consent
                 </button>
               </div>
             )}

@@ -6,12 +6,18 @@ export function ServicePage(props){
     const providers = useServiceProviderStore((state) => state.providers);
     const changeServiceStatus = useServiceProviderStore((state) => state.toggleStatus);
     const createConsent = useConsentStore((state) => state.createConsent);
+    const consents = useConsentStore((state) => state.consents);
+    const getConsentStatus = useConsentStore((state) => state.getStatus);
+    const updateConsent = useConsentStore((state) => state.updateConsent);
 
     return (
         <ServicePageView
         providers={providers}
         changeServiceStatus={changeServiceStatus}
         createConsent={createConsent}
+        consents={consents}
+        getConsentStatus={getConsentStatus}
+        updateConsent={updateConsent}
         />
     );
 }

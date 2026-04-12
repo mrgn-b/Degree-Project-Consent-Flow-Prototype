@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { ConsentRequestModal } from "../modals/consentRequestModal";
+import { ConsentDetailsModal } from "../modals/ConsentDetailsModal";
 
 export function ServicePageView(props) {
   const providers = props.providers;
   const createConsent = props.createConsent;
   const changeServiceStatus = props.changeServiceStatus;
+  const consents = props.consents;
+  const getConsentStatus = props.getConsentStatus;
+  const updateConsent = props.updateConsent;
 
   const [serviceToAccept, setServiceToAccept] = useState(null);
+  const [selectedConsentToView, setSelectedConsentToView] = useState(null);
 
   const activeProviders = providers.filter(p => p.status === "active");
   const inactiveProviders = providers.filter(p => p.status === "inactive");
@@ -17,9 +22,18 @@ export function ServicePageView(props) {
     providerMap[p.id] = { name: p.name, ...p };
   });
 
-  function handleConsentACB(provider) {
+  function handleAccessService(provider) {
     if (provider.status === "inactive") {
       setServiceToAccept(provider);
+    }
+  }
+
+  function handleManageConsent(provider) {
+    const consent = consents.find(
+      c => c.serviceId === provider.id && c.metadata.source === "Service Page"
+    );
+    if (consent) {
+      setSelectedConsentToView(consent);
     }
   }
 
@@ -36,10 +50,10 @@ export function ServicePageView(props) {
 
   function renderProviderCardACB(provider, index) {
     return (
-        <div
+      <div
         key={index}
         className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition flex flex-col items-center"
-        >
+      >
         <img
             src={provider.logoUrl || null}
             alt={provider.name}
@@ -48,17 +62,40 @@ export function ServicePageView(props) {
         <h2 className="text-xl font-semibold text-gray-800 mb-1">{provider.name}</h2>
         <p className="text-gray-600 text-center mb-4">{provider.description}</p>
         <span
-            className={`mb-4 px-2 py-1 rounded-full text-sm font-medium ${
+          className={`mb-4 px-2 py-1 rounded-full text-sm font-medium ${
             provider.status === "active" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
-            }`}
+          }`}
         >
-            {provider.status === "active" ? "Active" : "Inactive"}
+          {provider.status === "active" ? "Active" : "Inactive"}
         </span>
-        <button onClick={() => handleConsentACB(provider)}
-        className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition">
-            {provider.status === "active" ? "Access" : "Connect"}
-        </button>
+        
+        {/* Button(s) */}
+        <div className="flex gap-2">
+          {provider.status === "inactive" ? (
+            <button
+              onClick={() => handleAccessService(provider)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+            >
+              Connect
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => handleAccessService(provider)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+              >
+                Access
+              </button>
+              <button
+                onClick={() => handleManageConsent(provider)}
+                className="px-4 py-2 bg-white border border-gray-800 text-gray-800 rounded-xl font-medium hover:bg-gray-50 transition"
+              >
+                Manage
+              </button>
+            </>
+          )}
         </div>
+      </div>
     );
   }
 
@@ -81,7 +118,7 @@ export function ServicePageView(props) {
         {inactiveProviders.map(renderProviderCardACB)}
       </div>
 
-      {/* Consent Details Modal for new consent */}
+      {/* Consent Request Modal for new consent */}
       {serviceToAccept && (
         <ConsentRequestModal
           serviceId={serviceToAccept.id}
@@ -90,6 +127,21 @@ export function ServicePageView(props) {
           thirdParties={serviceToAccept.thirdParties}
           updateConsent={handleCreateConsent}
           onClose={() => setServiceToAccept(null)}
+        />
+      )}
+
+      {/* Consent Details Modal for active services */}
+      {selectedConsentToView && (
+        <ConsentDetailsModal
+          consent={selectedConsentToView}
+          providerMap={providerMap}
+          requestMap={{}}
+          getConsentStatus={getConsentStatus}
+          updateConsent={updateConsent}
+          onRevoke={() => {
+            setSelectedConsentToView(null);
+          }}
+          onClose={() => setSelectedConsentToView(null)}
         />
       )}
     </div>

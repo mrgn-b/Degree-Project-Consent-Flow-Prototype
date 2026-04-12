@@ -9,9 +9,11 @@ export function ServicePageView(props) {
   const consents = props.consents;
   const getConsentStatus = props.getConsentStatus;
   const updateConsent = props.updateConsent;
+  const toggleConsentStatus = props.toggleConsentStatus;
 
   const [serviceToAccept, setServiceToAccept] = useState(null);
   const [selectedConsentToView, setSelectedConsentToView] = useState(null);
+  const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
 
   const activeProviders = providers.filter(p => p.status === "active");
   const inactiveProviders = providers.filter(p => p.status === "inactive");
@@ -30,7 +32,9 @@ export function ServicePageView(props) {
 
   function handleManageConsent(provider) {
     const consent = consents.find(
-      c => c.serviceId === provider.id && c.metadata.source === "Service Page"
+      c => c.serviceId === provider.id && 
+           c.metadata.source === "Service Page" &&
+           getConsentStatus(c) === "active"
     );
     if (consent) {
       setSelectedConsentToView(consent);
@@ -48,6 +52,15 @@ export function ServicePageView(props) {
     setServiceToAccept(null);
   }
 
+  function confirmRevoke() {
+    if (selectedConsentToRevoke) {
+      toggleConsentStatus(selectedConsentToRevoke.id);
+      changeServiceStatus(selectedConsentToRevoke.serviceId);
+      setSelectedConsentToRevoke(null);
+      setSelectedConsentToView(null);
+    }
+  }
+
   function renderProviderCardACB(provider, index) {
     return (
       <div
@@ -55,9 +68,9 @@ export function ServicePageView(props) {
         className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition flex flex-col items-center"
       >
         <img
-            src={provider.logoUrl || null}
-            alt={provider.name}
-            className="w-20 h-20 object-contain mb-4"
+          src={provider.logoUrl || null}
+          alt={provider.name}
+          className="w-20 h-20 object-contain mb-4"
         />
         <h2 className="text-xl font-semibold text-gray-800 mb-1">{provider.name}</h2>
         <p className="text-gray-600 text-center mb-4">{provider.description}</p>
@@ -138,11 +151,49 @@ export function ServicePageView(props) {
           requestMap={{}}
           getConsentStatus={getConsentStatus}
           updateConsent={updateConsent}
-          onRevoke={() => {
-            setSelectedConsentToView(null);
-          }}
+          onRevoke={() => setSelectedConsentToRevoke(selectedConsentToView)}
           onClose={() => setSelectedConsentToView(null)}
         />
+      )}
+
+      {/* Revoke Confirmation Modal */}
+      {selectedConsentToRevoke && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setSelectedConsentToRevoke(null)}
+          />
+
+          {/* Modal */}
+          <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+            <h2 className="text-lg font-semibold">Revoke Consent</h2>
+
+            <p className="text-sm text-gray-600 mt-2">
+              Are you sure you want to revoke consent for{" "}
+              <span className="font-medium">
+                {providerMap[selectedConsentToRevoke.serviceId].name}
+              </span>
+              ? Access to service will be lost.
+            </p>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setSelectedConsentToRevoke(null)}
+                className="px-4 py-2 text-sm rounded-lg border"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmRevoke}
+                className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white"
+              >
+                Confirm Revoke
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

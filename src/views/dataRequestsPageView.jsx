@@ -10,6 +10,7 @@ export function DataRequestsPageView(props){
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [selectedRequestToAccept, setSelectedRequestToAccept] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedRequestToRevoke, setSelectedRequestToRevoke] = useState(null);
 
   const filteredOffers = 
     statusFilter === "all" ? dataRequests : 
@@ -33,6 +34,22 @@ export function DataRequestsPageView(props){
     setStatus(consentData.serviceId, "active")
     setIsRequestModalOpen(false);
   }
+
+  const confirmRevoke = () => {
+    // Find the consent that matches this data request
+    const relevantConsent = props.consents?.find(
+      c => c.serviceId === selectedRequestToRevoke.id && 
+          c.metadata.source !== "Service Page"
+    );
+    
+    if (relevantConsent) {
+      props.toggleConsentStatus(relevantConsent.id);  // Pass consent ID, not request ID
+    }
+    
+    props.setRequestStatus(selectedRequestToRevoke.id, "revoked");
+    setSelectedRequestToRevoke(null);
+    setSelectedRequest(null);
+  };
 
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
@@ -189,6 +206,15 @@ export function DataRequestsPageView(props){
                 Close
               </button>
 
+              {selectedRequest.status === "active" && (
+                <button
+                  onClick={() => setSelectedRequestToRevoke(selectedRequest)}
+                  className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white"
+                >
+                  Revoke
+                </button>
+              )}
+
               {selectedRequest.status === "available" && (
                 <button
                   onClick={() => {
@@ -201,6 +227,46 @@ export function DataRequestsPageView(props){
                   Accept Request
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Revoke Confirmation Modal */}
+      {selectedRequestToRevoke && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setSelectedRequestToRevoke(null)}
+          />
+
+          {/* Modal */}
+          <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+            <h2 className="text-lg font-semibold">Revoke Data Offer</h2>
+
+            <p className="text-sm text-gray-600 mt-2">
+              Are you sure you want to revoke{" "}
+              <span className="font-medium">
+                {selectedRequestToRevoke.name}
+              </span>
+              ? Rewards will be lost.
+            </p>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setSelectedRequestToRevoke(null)}
+                className="px-4 py-2 text-sm rounded-lg border"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmRevoke}
+                className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white"
+              >
+                Confirm Revoke
+              </button>
             </div>
           </div>
         </div>

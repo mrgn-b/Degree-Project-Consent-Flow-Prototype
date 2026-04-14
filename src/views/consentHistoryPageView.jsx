@@ -5,12 +5,19 @@ export function ConsentHistoryPageView(props) {
   const consentMap = props.consentMap;
   const providerMap = props.providerMap;
   const requestMap = props.requestMap;
+  const lastVisitTime = props.lastVisitTime;
 
   const actions = [...props.actions].sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
   );
 
   const formatDate = (ts) => new Date(ts).toLocaleString();
+
+const isNewSinceLastVisit = (actionTimestamp) => {
+  const actionTime = new Date(actionTimestamp).getTime();
+  // Show dot if action is newer than last visit, or if no previous visit was ever recorded
+  return actionTime > lastVisitTime || lastVisitTime === Date.now();
+};
 
   const getActionLabel = (type) => {
     switch (type) {
@@ -87,9 +94,10 @@ export function ConsentHistoryPageView(props) {
 
         {filteredActions.map((action) => (
           <div key={action.id} className="relative">
-            {/* Timeline dot */}
-            <span className="absolute -left-[9px] top-1 w-4 h-4 bg-blue-600 rounded-full border-2 border-white" />
-
+    {/* Timeline dot - only render if new */}
+    {isNewSinceLastVisit(action.timestamp) && (
+      <span className="absolute -left-[9px] top-1 w-4 h-4 bg-blue-600 rounded-full border-2 border-white" />
+    )}
             {/* Card */}
             <div className="bg-white shadow rounded-xl p-4">
               <div className="flex justify-between items-center">

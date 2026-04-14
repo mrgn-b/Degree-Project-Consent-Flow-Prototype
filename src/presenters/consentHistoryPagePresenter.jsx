@@ -3,12 +3,14 @@ import { useConsentStore } from "../stores/useConsentStore";
 import { useServiceProviderStore } from "../stores/useServiceProviderStore";
 import { useMemo } from "react";
 import { useDataRequestsStore } from "../stores/useDataRequestsStore";
+import { useConsentHistoryLastVisit } from "../hooks/useConsentHistoryLastVisit";
 
 export function ConsentHistoryPage(){
     const actions = useConsentStore((state => state.consentActions));
     const consents = useConsentStore((state) => state.consents);
     const providers = useServiceProviderStore((state) => state.providers);
     const dataRequests = useDataRequestsStore((state) => state.dataRequests);
+    const lastVisitTime = useConsentHistoryLastVisit();
 
     // Get consent object by id
     const consentMap = useMemo(() => {
@@ -37,6 +39,7 @@ export function ConsentHistoryPage(){
         consentMap={consentMap}
         providerMap={providerMap}
         requestMap={requestMap}
+        lastVisitTime={lastVisitTime}
         />
     );
 }

@@ -14,6 +14,8 @@ export function ConsentDashboardView(props) {
   const [selectedConsentToRevoke, setSelectedConsentToRevoke] = useState(null);
   const [editableConsent, setEditableConsent] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortKey, setSortKey] = useState("status");
+  const [sortDirection, setSortDirection] = useState("asc");
 
   const statusStyles = {
     active: "bg-green-100 text-green-700",
@@ -48,9 +50,74 @@ export function ConsentDashboardView(props) {
     );
   }
 
-  const filteredConsents = 
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDirection("asc");
+    }
+  };
+
+  const getStatusSortOrder = (status) => {
+    const order = { active: 0, revoked: 1, expired: 2 };
+    return order[status] ?? 3;
+  };
+
+  const getSortValue = (consent, key) => {
+    switch (key) {
+      case "service":
+        return consent.metadata.source === "Service Page" 
+          ? props.providerMap[consent.serviceId]?.name || "" 
+          : requestMap[consent.serviceId]?.name || "";
+      case "status":
+        return getStatusSortOrder(props.getConsentStatus(consent));
+      case "updated":
+        return new Date(consent.timestamps.updatedAt).getTime();
+      case "expires":
+        return new Date(consent.timestamps.expiresAt).getTime();
+      case "revoked":
+        return consent.timestamps.revokedAt ? new Date(consent.timestamps.revokedAt).getTime() : Infinity;
+      default:
+        return "";
+    }
+  };
+
+  let filteredConsents = 
     statusFilter === "all" ? reversedConsents : 
       reversedConsents.filter((c) => props.getConsentStatus(c) == statusFilter);
+
+  filteredConsents = [...filteredConsents].sort((a, b) => {
+    if (sortKey === "revoked") {
+      const aStatus = props.getConsentStatus(a);
+      const bStatus = props.getConsentStatus(b);
+      
+      const statusOrder = { revoked: 0, expired: 1, active: 2 };
+      const aStatusOrder = statusOrder[aStatus] ?? 3;
+      const bStatusOrder = statusOrder[bStatus] ?? 3;
+      
+      if (aStatusOrder !== bStatusOrder) {
+        return aStatusOrder - bStatusOrder;
+      }
+      
+      // Within the same status, sort by revoked timestamp
+      const aValue = getSortValue(a, sortKey);
+      const bValue = getSortValue(b, sortKey);
+      return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
+    }
+    
+    const aValue = getSortValue(a, sortKey);
+    const bValue = getSortValue(b, sortKey);
+
+    let comparison = 0;
+    if (typeof aValue === "string") {
+      comparison = aValue.localeCompare(bValue);
+    } else {
+      comparison = aValue - bValue;
+    }
+
+    return sortDirection === "asc" ? comparison : -comparison;
+  });
 
   return (
     <div className="p-6 space-y-6">
@@ -94,11 +161,36 @@ export function ConsentDashboardView(props) {
         <table className="w-full text-left">
           <thead className="bg-gray-50 text-sm text-gray-600">
             <tr>
-              <th className="p-4">Service</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Updated</th>
-              <th className="p-4">Expires</th>
-              <th className="p-4">Revoked At</th>
+              <th 
+                className="p-4 cursor-pointer hover:bg-gray-100 transition select-none"
+                onClick={() => handleSort("service")}
+              >
+                Service {sortKey === "service" && (sortDirection === "asc" ? "↑" : "↓")}
+              </th>
+              <th 
+                className="p-4 cursor-pointer hover:bg-gray-100 transition select-none"
+                onClick={() => handleSort("status")}
+              >
+                Status {sortKey === "status" && (sortDirection === "asc" ? "↑" : "↓")}
+              </th>
+              <th 
+                className="p-4 cursor-pointer hover:bg-gray-100 transition select-none"
+                onClick={() => handleSort("updated")}
+              >
+                Updated {sortKey === "updated" && (sortDirection === "asc" ? "↑" : "↓")}
+              </th>
+              <th 
+                className="p-4 cursor-pointer hover:bg-gray-100 transition select-none"
+                onClick={() => handleSort("expires")}
+              >
+                Expires {sortKey === "expires" && (sortDirection === "asc" ? "↑" : "↓")}
+              </th>
+              <th 
+                className="p-4 cursor-pointer hover:bg-gray-100 transition select-none"
+                onClick={() => handleSort("revoked")}
+              >
+                Revoked At {sortKey === "revoked" && (sortDirection === "asc" ? "↑" : "↓")}
+              </th>
               <th className="p-4"></th>
             </tr>
           </thead>

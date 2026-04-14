@@ -27,6 +27,7 @@ export function ConsentDashboardView(props) {
     changeServiceStatus(selectedConsentToRevoke.serviceId) :
     setRequestStatus(selectedConsentToRevoke.serviceId, "revoked");
     setSelectedConsentToRevoke(null);
+    setEditableConsent(null);
   };
   
   function SummaryCard({ title, count, color }) {

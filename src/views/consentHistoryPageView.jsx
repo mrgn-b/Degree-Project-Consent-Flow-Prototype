@@ -119,8 +119,8 @@ const isNewSinceLastVisit = (actionTimestamp) => {
                           <li key={p.id} className="flex justify-between text-sm">
                             <span>{p.description || p.id}</span>
                             <span>
-                              <span className="text-red-500">{p.from ? "Granted" : "Denied"}</span>{" → "}
-                              <span className="text-green-600">{p.to ? "Granted" : "Denied"}</span>
+                              <span className={p.from ? "text-green-600" : "text-red-500"}>{p.from ? "Granted" : "Denied"}</span>{" → "}
+                              <span className={p.to ? "text-green-600" : "text-red-500"}>{p.to ? "Granted" : "Denied"}</span>
                             </span>
                           </li>
                         ))}
@@ -136,8 +136,8 @@ const isNewSinceLastVisit = (actionTimestamp) => {
                           <li key={t.id} className="flex justify-between text-sm">
                             <span>{t.id}</span>
                             <span>
-                              <span className="text-red-500">{t.from ? "Granted" : "Denied"}</span>{" → "}
-                              <span className="text-green-600">{t.to ? "Granted" : "Denied"}</span>
+                              <span className={p.from ? "text-green-600" : "text-red-500"}>{p.from ? "Granted" : "Denied"}</span>{" → "}
+                              <span className={p.to ? "text-green-600" : "text-red-500"}>{p.to ? "Granted" : "Denied"}</span>
                             </span>
                           </li>
                         ))}

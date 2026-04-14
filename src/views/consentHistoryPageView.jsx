@@ -72,10 +72,10 @@ export function ConsentHistoryPageView(props) {
             {filter === "all"
               ? "All"
               : filter === "1h"
-              ? "Last 1 hour"
+              ? "Last hour"
               : filter === "1d"
-              ? "Last 1 day"
-              : "Last 1 month"}
+              ? "Last day"
+              : "Last month"}
           </button>
         ))}
       </div>

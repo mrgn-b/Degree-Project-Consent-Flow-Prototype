@@ -61,23 +61,21 @@ export function DataRequestsPageView(props){
         </p>
       </div>
 
-    {/* Filter Dropdown */}
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-gray-500">Filter by:</span>
-
-      <select
-        value={statusFilter}
-        onChange={(e) => setStatusFilter(e.target.value)}
-        className="text-sm bg-white border border-gray-200 rounded-lg px-3 py-1.5 shadow-sm
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300
-          transition cursor-pointer"
-      >
-        <option value="all">All</option>
-        <option value="available">Available</option>
-        <option value="active">Active</option>
-        <option value="completed">Completed</option>
-        <option value="revoked">Revoked</option>
-      </select>
+    {/* Filter Buttons */}
+    <div className="flex gap-2 mb-6 flex-wrap">
+      {["all", "available", "active", "completed", "revoked"].map((filter) => (
+        <button
+          key={filter}
+          className={`px-3 py-1 rounded text-sm ${
+            statusFilter === filter ? "bg-blue-600 text-white" : "bg-gray-100"
+          }`}
+          onClick={() => setStatusFilter(filter)}
+        >
+          {filter === "all"
+            ? "All"
+            : filter.charAt(0).toUpperCase() + filter.slice(1)}
+        </button>
+      ))}
     </div>
 
       {/* Cards */}

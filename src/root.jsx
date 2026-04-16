@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { MainPage } from "./presenters/mainPagePresenter";
 import { ServicePage } from "./presenters/servicePagePresenter";
 import { ConsentDashboard } from "./presenters/consentDashboardPresenter";
@@ -7,7 +7,7 @@ import { DataRequestsPage } from "./presenters/dataRequestsPagePresenter";
 
 export function Root(props){
     return (
-        <Router basename="/Degree-Project-Consent-Flow-Prototype/">
+        <Router>
             {/* Navbar */}
             <nav className="bg-blue-600 text-white w-full p-4 flex justify-center gap-4">
                 <Link className="hover:underline" to="/">Main Page</Link>

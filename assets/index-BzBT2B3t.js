@@ -12777,7 +12777,7 @@ var model = {
 			id: "acme",
 			name: "Acme Analytics",
 			description: "Data analytics and insights provider",
-			logoUrl: "/assets/logos/acme.svg",
+			logoUrl: `/Degree-Project-Consent-Flow-Prototype/assets/logos/acme.svg`,
 			status: "inactive",
 			purposes: [
 				{
@@ -12832,7 +12832,7 @@ var model = {
 			id: "notifyco",
 			name: "NotifyCo",
 			description: "Push notification and messaging service",
-			logoUrl: "/assets/logos/notifyco.svg",
+			logoUrl: `/Degree-Project-Consent-Flow-Prototype/assets/logos/notifyco.svg`,
 			status: "inactive",
 			purposes: [
 				{
@@ -12883,7 +12883,7 @@ var model = {
 			id: "hair",
 			name: "Hair Salon Luxe",
 			description: "Premium hairdressing services",
-			logoUrl: "/assets/logos/hair.svg",
+			logoUrl: `/Degree-Project-Consent-Flow-Prototype/assets/logos/hair.svg`,
 			status: "inactive",
 			purposes: [
 				{
@@ -12934,7 +12934,7 @@ var model = {
 			id: "secureprofile",
 			name: "SecureProfile",
 			description: "User identity and profile management",
-			logoUrl: "/assets/logos/secureprofile.svg",
+			logoUrl: `/Degree-Project-Consent-Flow-Prototype/assets/logos/secureprofile.svg`,
 			status: "inactive",
 			purposes: [
 				{
@@ -12985,7 +12985,7 @@ var model = {
 			id: "plumb",
 			name: "PlumbRight",
 			description: "Certified plumbing services",
-			logoUrl: "/assets/logos/plumber.svg",
+			logoUrl: `/Degree-Project-Consent-Flow-Prototype/assets/logos/plumber.svg`,
 			status: "inactive",
 			purposes: [
 				{
@@ -13029,7 +13029,7 @@ var model = {
 			id: "cafe",
 			name: "Cafe Delight",
 			description: "Coffee and snack delivery service",
-			logoUrl: "/assets/logos/cafe.svg",
+			logoUrl: `/Degree-Project-Consent-Flow-Prototype/assets/logos/cafe.svg`,
 			status: "inactive",
 			purposes: [
 				{
@@ -14362,4 +14362,4 @@ function Root(props) {
 (0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, { model }));
 //#endregion
 
-//# sourceMappingURL=index-T6BY35p4.js.map
+//# sourceMappingURL=index-BzBT2B3t.js.map

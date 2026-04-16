@@ -4,7 +4,7 @@ export const model = {
       id: "acme",
       name: "Acme Analytics",
       description: "Data analytics and insights provider",
-      logoUrl: "/assets/logos/acme.svg",
+      logoUrl: `${import.meta.env.BASE_URL}assets/logos/acme.svg`,
       status: "inactive",
       purposes: [
         {
@@ -52,7 +52,7 @@ export const model = {
       id: "notifyco",
       name: "NotifyCo",
       description: "Push notification and messaging service",
-      logoUrl: "/assets/logos/notifyco.svg",
+      logoUrl: `${import.meta.env.BASE_URL}assets/logos/notifyco.svg`,
       status: "inactive",
       purposes: [
         {
@@ -100,7 +100,7 @@ export const model = {
       id: "hair",
       name: "Hair Salon Luxe",
       description: "Premium hairdressing services",
-      logoUrl: "/assets/logos/hair.svg",
+      logoUrl: `${import.meta.env.BASE_URL}assets/logos/hair.svg`,
       status: "inactive",
       purposes: [
         {
@@ -148,7 +148,7 @@ export const model = {
       id: "secureprofile",
       name: "SecureProfile",
       description: "User identity and profile management",
-      logoUrl: "/assets/logos/secureprofile.svg",
+      logoUrl: `${import.meta.env.BASE_URL}assets/logos/secureprofile.svg`,
       status: "inactive",
       purposes: [
         {
@@ -196,7 +196,7 @@ export const model = {
       id: "plumb",
       name: "PlumbRight",
       description: "Certified plumbing services",
-      logoUrl: "/assets/logos/plumber.svg",
+      logoUrl: `${import.meta.env.BASE_URL}assets/logos/plumber.svg`,
       status: "inactive",
       purposes: [
         {
@@ -237,7 +237,7 @@ export const model = {
       id: "cafe",
       name: "Cafe Delight",
       description: "Coffee and snack delivery service",
-      logoUrl: "/assets/logos/cafe.svg",
+      logoUrl: `${import.meta.env.BASE_URL}assets/logos/cafe.svg`,
       status: "inactive",
       purposes: [
         {

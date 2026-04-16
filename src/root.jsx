@@ -7,7 +7,7 @@ import { DataRequestsPage } from "./presenters/dataRequestsPagePresenter";
 
 export function Root(props){
     return (
-        <Router>
+        <Router basename="/Degree-Project-Consent-Flow-Prototype/">
             {/* Navbar */}
             <nav className="bg-blue-600 text-white w-full p-4 flex justify-center gap-4">
                 <Link className="hover:underline" to="/">Main Page</Link>

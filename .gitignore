@@ -1,0 +1,48 @@
+# ==============================
+# Node dependencies
+# ==============================
+node_modules/
+
+# ==============================
+# Vite / build outputs
+# ==============================
+dist/
+out/
+.cache/
+
+# ==============================
+# Environment variables
+# ==============================
+.env
+.env.local
+.env.*.local
+
+# ==============================
+# Logs
+# ==============================
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.log
+
+# ==============================
+# Tailwind / PostCSS / Vite temp files
+# ==============================
+*.css.map
+*.postcssrc.js
+*.tailwind.config.js.map
+
+# ==============================
+# Editor / IDE
+# ==============================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ==============================
+# OS / System
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini

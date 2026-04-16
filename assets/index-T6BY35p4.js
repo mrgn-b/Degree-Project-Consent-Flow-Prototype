@@ -14302,61 +14302,64 @@ function DataRequestsPage() {
 //#endregion
 //#region src/root.jsx
 function Root(props) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BrowserRouter, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
-		className: "bg-blue-600 text-white w-full p-4 flex justify-center gap-4",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-				className: "hover:underline",
-				to: "/",
-				children: "Main Page"
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BrowserRouter, {
+		basename: "/Degree-Project-Consent-Flow-Prototype/",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
+			className: "bg-blue-600 text-white w-full p-4 flex justify-center gap-4",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+					className: "hover:underline",
+					to: "/",
+					children: "Main Page"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+					className: "hover:underline",
+					to: "/services",
+					children: "Services"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+					className: "hover:underline",
+					to: "/data-offers",
+					children: "Data Offers"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+					className: "hover:underline",
+					to: "/consent-dashboard",
+					children: "Consent Dashboard"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+					className: "hover:underline",
+					to: "/consent-history",
+					children: "Consent History"
+				})
+			]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+				path: "/",
+				element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MainPage, {})
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-				className: "hover:underline",
-				to: "/services",
-				children: "Services"
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+				path: "/services",
+				element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ServicePage, { model: props.model })
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-				className: "hover:underline",
-				to: "/data-offers",
-				children: "Data Offers"
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+				path: "/consent-dashboard",
+				element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ConsentDashboard, {})
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-				className: "hover:underline",
-				to: "/consent-dashboard",
-				children: "Consent Dashboard"
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+				path: "/consent-history",
+				element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ConsentHistoryPage, {})
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-				className: "hover:underline",
-				to: "/consent-history",
-				children: "Consent History"
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+				path: "/data-offers",
+				element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DataRequestsPage, {})
 			})
-		]
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, { children: [
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-			path: "/",
-			element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MainPage, {})
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-			path: "/services",
-			element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ServicePage, { model: props.model })
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-			path: "/consent-dashboard",
-			element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ConsentDashboard, {})
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-			path: "/consent-history",
-			element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ConsentHistoryPage, {})
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-			path: "/data-offers",
-			element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DataRequestsPage, {})
-		})
-	] })] });
+		] })]
+	});
 }
 //#endregion
 //#region src/index.jsx
 (0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, { model }));
 //#endregion
 
-//# sourceMappingURL=index-BTLGjVbu.js.map
+//# sourceMappingURL=index-T6BY35p4.js.map

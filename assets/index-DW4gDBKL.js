@@ -13369,7 +13369,7 @@ var useConsentStore = create(persist((set, get) => {
 	const expirationTimers = {};
 	const scheduleExpiration = (consent) => {
 		const msUntilExpiration = new Date(consent.timestamps.expiresAt).getTime() - Date.now();
-		if (msUntilExpiration > 0) {
+		if (msUntilExpiration >= 0) {
 			if (expirationTimers[consent.id]) clearTimeout(expirationTimers[consent.id]);
 			expirationTimers[consent.id] = setTimeout(() => {
 				const nowISO = (/* @__PURE__ */ new Date()).toISOString();
@@ -13552,7 +13552,12 @@ var useConsentStore = create(persist((set, get) => {
 		getExpiredCount: () => get().consents.filter((c) => get().getStatus(c) === "expired").length,
 		scheduleAllExpirations
 	};
-}, { name: "consents" }));
+}, {
+	name: "consents",
+	onRehydrateStorage: () => (state) => {
+		if (state && state.consents) state.scheduleAllExpirations();
+	}
+}));
 useConsentStore.subscribe((state) => state.consents, (consents, previous) => {
 	consents.forEach((c) => {
 		const prev = previous?.find((p) => p.id === c.id);
@@ -14365,4 +14370,4 @@ function Root(props) {
 (0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, { model }));
 //#endregion
 
-//# sourceMappingURL=index-BxUq6gMq.js.map
+//# sourceMappingURL=index-DW4gDBKL.js.map

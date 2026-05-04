@@ -18,7 +18,7 @@ export const useConsentStore = create(
             const now = Date.now();
             const msUntilExpiration = expiresAt - now;
 
-            if (msUntilExpiration > 0) {
+            if (msUntilExpiration >= 0) {
                 if (expirationTimers[consent.id]) clearTimeout(expirationTimers[consent.id]);
 
                 expirationTimers[consent.id] = setTimeout(() => {
@@ -232,7 +232,15 @@ export const useConsentStore = create(
                 scheduleAllExpirations,
             };
         },
-        { name: "consents" }
+        // Reschedule timers when store rehydrates from localStorage
+        {
+            name: "consents",
+            onRehydrateStorage: () => (state) => {
+                if (state && state.consents) {
+                    state.scheduleAllExpirations();
+                }
+            },
+        }
     )
 );
 

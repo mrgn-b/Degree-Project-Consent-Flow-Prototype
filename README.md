@@ -10,6 +10,7 @@ This repository contains the source code for the web application prototype devel
 
 - [About The Project](#about-the-project)
 - [Key Features](#key-features)
+- [Getting Started](#getting-started)
 - [Tech Stack](#tech-stack)
 - [Future Work](#future-work)
 - [Thesis Information](#thesis-information)
@@ -59,6 +60,25 @@ The application also includes a **Consent Dashboard** for managing active consen
 
 ---
 
+## Getting Started
+
+To run the project locally:
+
+1. **Install dependencies** (if you haven't already):
+   ```bash
+   npm install
+   ```
+
+2. **Start the development server**:
+    ```bash
+    npm run dev
+    ```
+
+3. **Open in your browser**:
+    Once the server starts, look for a link in your terminal output (typically something like `http://localhost:8080/Degree-Project-Consent-Flow-Prototype/`). Copy and paste that link into your web browser.
+
+---
+
 ## Tech Stack
 
 ### Frontend Development
@@ -98,6 +118,7 @@ This project was submitted in fulfillment of the requirements for the Degree Pro
 |---------|------------|
 | **Title** | Design and Prototyping of a User-centered Consent Flow |
 | **Swedish Title** | Design och prototypframtagning av ett användarcentrerat samtyckesflöde |
+| **Authors** | Mateusz Kaszyk & Morgan Bjälvenäs
 | **Institution** | KTH Royal Institute of Technology (Kungliga Tekniska högskolan) |
 | **Host Company** | Fixmeapp AB |
 | **School** | School of Electrical Engineering and Computer Science |
@@ -117,6 +138,6 @@ Special thanks to the people that made this project possible:
 
 ---
 
-### Citation
+## Citation
 
 If you use or reference this project in academic work, please cite the associated Bachelor's thesis.
